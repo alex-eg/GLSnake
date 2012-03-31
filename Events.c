@@ -1,4 +1,4 @@
-#include "Events.h"
+#include "Globals.h"
 
 void SProcessEvent(SApp *App, SDL_Event *Event)
 {

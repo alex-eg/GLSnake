@@ -1,52 +1,17 @@
 /*--- HINT! Compile with "gcc -o snake main.c -lSDL -lGL" ---*/
 
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
 #include <time.h>
 
-#include <SDL/SDL.h>
-#include <GL/gl.h>
-
-#define CUBESIZE 15
-#define CELLSIZE 36
-#define MATRIXSIZE 20
-
-struct SPoint{
-    int x,y;
-    struct SPoint *next;
-};
-
-typedef struct SPoint SPoint;
-
-enum state {loading, menu, ingame, paused, highscores};
-typedef enum state state;
-
-typedef struct {
-    int Running;
-    SDL_Surface* SDisplay;
-    int dx, dy;
-    SPoint Food;
-    SPoint *Head;
-    int KeyPressed;
-    state State;
-    int Timer;
-    int Speed;
-} SApp;
+#include "Globals.h"
 
 int SInit(SApp *);
-void SProcessEvent(SApp *, SDL_Event *);
 void SLoop(SApp *);
-void SRender(SApp *);
 void SCleanup(SApp *);
-void SOnKeyDown(SApp *, SDLKey, SDLMod, Uint16);
 
 /*--- LOOP ---*/
 void ProcessNewState(SApp *);
-
-/*--- GRAPHICS ---*/
-void SRect(int, int);
-void SGrid(void);
 
 int main(int argc, char** argv)
 {
@@ -132,46 +97,10 @@ int SInit(SApp *App)
     return 0;
 }
 
-void SProcessEvent(SApp *App, SDL_Event *Event)
-{
-    switch (Event->type) {
-    case SDL_KEYDOWN : {
-        SOnKeyDown(App, Event->key.keysym.sym,Event->key.keysym.mod,Event->key.keysym.unicode);
-        break;
-    }
-    case SDL_QUIT : {
-        App->Running = 0;
-        break;
-    }
-    default:
-        break;
-    }
-}
-
 void SLoop(SApp *App)
 {
     if ((App->Timer++ >= App->Speed) && (App->State == ingame))
 	ProcessNewState(App);
-}
-
-void SRender(SApp *App)
-{
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    if (App->Head->next != NULL) {
-        SPoint *curr = App->Head->next;
-        do {
-            glColor3f(0.0, 0.3, 0.8);
-            SRect(curr->x,curr->y);
-            curr = curr->next;
-        } while (curr != NULL);
-    }
-    glColor3f(0.7, 0.3, 0.1);
-    SRect(App->Food.x,App->Food.y);
-    glColor3f(0.1, 0.5, 0.5);
-    SRect(App->Head->x,App->Head->y);
-    SGrid();
-    SDL_GL_SwapBuffers();
 }
 
 void SCleanup(SApp *App)
@@ -195,99 +124,6 @@ void SCleanup(SApp *App)
 	    curr->next = NULL;
 	}
 	free(App->Head);
-    }
-}
-
-void SOnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
-{
-    switch (sym) {
-    case 282: { //F1
-	App->dx=0;
-	App->dy=0;
-	break;
-    }
-    case 27: { //ESC
-	if (App->State==ingame) App->State=paused;
-	else App->State=ingame;
-        break;
-    }
-    case 119: { //W
-        if ((App->dy == 0) && !App->KeyPressed) {
-            App->dy = -1;
-            App->dx = 0;
-	    App->KeyPressed = 1;
-        } else break;
-        break;
-    }
-    case 97: { //A
-        if ((App->dx == 0) && !App->KeyPressed) {
-            App->dy = 0;
-            App->dx = -1;
-	    App->KeyPressed = 1;
-        } else break;
-        break;
-    }
-    case 115: { //S
-        if ((App->dy == 0) && !App->KeyPressed) {
-            App->dy = 1;
-            App->dx = 0;
-	    App->KeyPressed = 1;
-        } else break;
-        break;
-    }
-    case 100: { //D
-        if ((App->dx == 0) && !App->KeyPressed) {
-            App->dy = 0;
-            App->dx = 1;
-	    App->KeyPressed = 1;
-        } else break;
-        break;
-    }
-    case 270: { //Num+
-	App->Speed--;
-	break;
-    }
-    case 269: { ///Num-
-	App->Speed++;
-	break;
-    }
-    default: break;
-    }
-}
-
-void SRect(int x, int y)
-{
-    int xc, yc;
-    xc=CELLSIZE*x+CELLSIZE/2;
-    yc=CELLSIZE*y+CELLSIZE/2;
-
-    glBegin(GL_QUADS);
-
-    glVertex2f(xc-CUBESIZE, yc-CUBESIZE);
-    glVertex2f(xc+CUBESIZE, yc-CUBESIZE);
-    glVertex2f(xc+CUBESIZE, yc+CUBESIZE);
-    glVertex2f(xc-CUBESIZE, yc+CUBESIZE);
-
-    glEnd();
-}
-
-void SGrid(void)
-{
-    int i=0;
-    glColor3f(0.3, 0.0 ,0.0);
-    for (; i<=MATRIXSIZE; i++) {
-        glBegin(GL_LINES);
-        glVertex2f(CELLSIZE*i,0);
-        glVertex2f(CELLSIZE*i,CELLSIZE*MATRIXSIZE);
-
-        glEnd();
-
-        glBegin(GL_LINES);
-
-        glVertex2f(0,CELLSIZE*i);
-        glVertex2f(CELLSIZE*MATRIXSIZE,CELLSIZE*i);
-
-        glEnd();
     }
 }
 

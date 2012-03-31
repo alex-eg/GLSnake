@@ -1,4 +1,4 @@
-#include "Graphics.h"
+#include "Globals.h"
 
 void SRender(SApp *App)
 {
