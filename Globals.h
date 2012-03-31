@@ -1,5 +1,6 @@
 #include <SDL/SDL.h>
 #include <GL/gl.h>
+#include <SDL/SDL_mixer.h>
 
 #define CUBESIZE 15
 #define CELLSIZE 36
@@ -9,11 +10,15 @@ struct SPoint{
     int x,y;
     struct SPoint *next;
 };
-
 typedef struct SPoint SPoint;
 
 enum state {loading, menu, ingame, paused, highscores};
 typedef enum state state;
+
+typedef struct {
+    Mix_Chunk *Snd;
+    int Chnl;
+} Sound;
 
 typedef struct {
     int Running;
@@ -25,6 +30,9 @@ typedef struct {
     state State;
     int Timer;
     int Speed;
+    //    Sound MainTheme;
+    Mix_Music *Music;
+    Sound Nyam;
 } SApp;
 
 /*--- EVENT PROCESSING --- */
@@ -37,3 +45,7 @@ void SRender(SApp *);
 /*--- OpenGL Drawing ---*/
 void SRect(int, int);
 void SGrid(void);
+
+/*--- Sound and music! ---*/
+void SInitSound(SApp *);
+void SPlaySound(Sound *);

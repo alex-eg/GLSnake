@@ -33,7 +33,7 @@ int main(int argc, char** argv)
 
         SLoop(&Snake);
         SRender(&Snake);
-        SDL_Delay(10);
+        SDL_Delay(50);
     }
     printf("Cleaning up... ");
     SCleanup(&Snake);
@@ -94,6 +94,11 @@ int SInit(SApp *App)
     glOrtho(0, CELLSIZE*MATRIXSIZE, CELLSIZE*MATRIXSIZE, 0, -1, 1);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
+    /*-----------------------------SOUND--------------------------------------*/
+
+    SInitSound(App);
+
     return 0;
 }
 
@@ -125,10 +130,12 @@ void SCleanup(SApp *App)
 	}
 	free(App->Head);
     }
+    Mix_CloseAudio();
+    SDL_Quit();
 }
 
-void ProcessNewState(SApp *App) {
-
+void ProcessNewState(SApp *App) 
+{
     int PrevX = App->Head->x;
     int PrevY = App->Head->y;
 
@@ -153,6 +160,8 @@ void ProcessNewState(SApp *App) {
         NewSegment->y = PrevY;
         NewSegment->next = App->Head->next;
 	App->Head->next = NewSegment;
+
+	SPlaySound(&App->Nyam);
     } else {
         SPoint *curr = App->Head;
         while (curr->next != NULL) {
