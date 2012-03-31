@@ -2,7 +2,7 @@
 #include <GL/gl.h>
 #include <SDL/SDL_mixer.h>
 
-#define CUBESIZE 15
+#define CUBESIZE 30
 #define CELLSIZE 36
 #define MATRIXSIZE 20
 
@@ -41,9 +41,10 @@ void SProcessEvent(SApp *, SDL_Event *);
 
 /*--- GRAPHICS ---*/
 void SRender(SApp *);
+void SInitGraphics(void);
 
 /*--- OpenGL Drawing ---*/
-void SRect(int, int);
+void SCube(int, int, int);
 void SGrid(void);
 
 /*--- Sound and music! ---*/

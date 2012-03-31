@@ -46,12 +46,12 @@ int SInit(SApp *App)
     /*------------------------------APP---------------------------------------*/
 
     App->Head = malloc(sizeof(SPoint));
-    App->Head->x = 5;
-    App->Head->y = 5;
+    App->Head->x = 0;
+    App->Head->y = 0;
     App->Head->next = NULL;
 
-    App->dx = -1;
-    App->dy = 0;
+    App->dx = 0;
+    App->dy = 1;
 
     App->Food.x = rand()%MATRIXSIZE;
     App->Food.y = rand()%MATRIXSIZE;
@@ -62,7 +62,7 @@ int SInit(SApp *App)
     App->State = loading;
     App->Running = 1;
     App->Timer = 0;
-    App->Speed = 3;
+    App->Speed = 1;
     App->State = ingame;
     
     /*------------------------------SDL---------------------------------------*/
@@ -74,6 +74,7 @@ int SInit(SApp *App)
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
 
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
     SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
 
     SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
@@ -88,12 +89,7 @@ int SInit(SApp *App)
 
     /*------------------------------OGL---------------------------------------*/
 
-    glDisable(GL_DEPTH_TEST);
-
-    glClearColor(0, 0, 0, 0);
-    glOrtho(0, CELLSIZE*MATRIXSIZE, CELLSIZE*MATRIXSIZE, 0, -1, 1);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    SInitGraphics();
 
     /*-----------------------------SOUND--------------------------------------*/
 

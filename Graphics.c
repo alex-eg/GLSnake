@@ -2,38 +2,78 @@
 
 void SRender(SApp *App)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (App->Head->next != NULL) {
         SPoint *curr = App->Head->next;
         do {
             glColor3f(0.0, 0.3, 0.8);
-            SRect(curr->x,curr->y);
+            SCube(curr->x,curr->y, CUBESIZE);
             curr = curr->next;
         } while (curr != NULL);
     }
     glColor3f(0.7, 0.3, 0.1);
-    SRect(App->Food.x,App->Food.y);
+    SCube(App->Food.x,App->Food.y, CUBESIZE+1);
     glColor3f(0.1, 0.5, 0.5);
-    SRect(App->Head->x,App->Head->y);
+    SCube(App->Head->x,App->Head->y, CUBESIZE+2);
     SGrid();
     SDL_GL_SwapBuffers();
 }
 
-void SRect(int x, int y)
+void SCube(int x, int y, int size)
 {
     int xc, yc;
-    xc=CELLSIZE*x+CELLSIZE/2;
-    yc=CELLSIZE*y+CELLSIZE/2;
-
+    xc=CELLSIZE*x+(CELLSIZE-    size)/2;
+    yc=CELLSIZE*y+(CELLSIZE-    size)/2;
+    
+    glPushMatrix();
+    glTranslatef(xc, yc, 0);
     glBegin(GL_QUADS);
+        
+    /* BOTTOM */
+    glNormal3d(0,0,-1);
+    glVertex3d(        0,         0, 0); 
+    glVertex3d(     size,         0, 0);
+    glVertex3d(     size,      size, 0);
+    glVertex3d(        0,      size, 0);
 
-    glVertex2f(xc-CUBESIZE, yc-CUBESIZE);
-    glVertex2f(xc+CUBESIZE, yc-CUBESIZE);
-    glVertex2f(xc+CUBESIZE, yc+CUBESIZE);
-    glVertex2f(xc-CUBESIZE, yc+CUBESIZE);
+    /* REAR */
+    glNormal3d(0,-1,0);
+    glVertex3d(       0, 0,        0);
+    glVertex3d(    size, 0,        0);
+    glVertex3d(    size, 0,     size);
+    glVertex3d(       0, 0,     size);
+
+    /* RIGHT */
+    glNormal3d(1,0,0);
+    glVertex3d(    size,        0,        0);
+    glVertex3d(    size,     size,        0);
+    glVertex3d(    size,     size,     size);
+    glVertex3d(    size,        0,     size);
+
+    /* FRONT */
+    glNormal3d(0,1,0);
+    glVertex3d(       0,     size,        0);
+    glVertex3d(    size,     size,        0);
+    glVertex3d(    size,     size,     size);
+    glVertex3d(       0,     size,     size);
+
+    /* LEFT */
+    glNormal3d(-1,0,0);
+    glVertex3d(       0,        0,        0);
+    glVertex3d(       0,     size,        0);
+    glVertex3d(       0,     size,     size);
+    glVertex3d(       0,        0,     size);
+
+    /* TOP */
+    glNormal3d(0,0,1);
+    glVertex3d(       0,        0,     size);
+    glVertex3d(       0,     size,     size);
+    glVertex3d(    size,     size,     size);
+    glVertex3d(    size,        0,     size);
 
     glEnd();
+    glPopMatrix();
 }
 
 void SGrid(void)
@@ -54,4 +94,31 @@ void SGrid(void)
 
         glEnd();
     }
+}
+
+void SInitGraphics(void)
+{
+    GLfloat light_position[] = { 0.0, 0.0, 3.0, 0.0 };
+    GLfloat amb[]  = { 0.0, 0.3, 0.3, 0.7 };
+
+    glClearColor (0.0, 0.0, 0.0, 0.0);
+    glShadeModel (GL_SMOOTH);
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv( GL_LIGHT0, GL_AMBIENT , amb  );
+    
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+ 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_COLOR_MATERIAL);
+    
+    glMatrixMode(GL_PROJECTION);
+    glFrustum(-305, 305, 305, -305, 655, 805);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(-CELLSIZE*MATRIXSIZE/2, -CELLSIZE*MATRIXSIZE/2, -804.0f);
+    
+
+   
 }
