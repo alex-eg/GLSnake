@@ -9,14 +9,13 @@ _OBJ = Main.o Sound.o Graphics.o Events.o
 OBJ = $(patsubst %,$(OBJPATH)/%,$(_OBJ))
 
 clean:
-	\rm -f ./*~ ./$(OBJPATH)/*.o ./$(BINPATH)/*
+	rm -f ./*~ ./$(OBJPATH)/*.o ./$(BINPATH)/*
 
-love:
-	echo 'Not war!'
+all: dir events graphics snd main app
 
-all: events graphics snd main app
-
-debug: CFLAGS = $(CFLAGS) -g all
+dir:
+	mkdir -p ./obj
+	mkdir -p ./bin
 
 events:
 	$(CC) -c -o $(OBJPATH)/Events.o Events.c $(LIBS) $(CFLAGS)
