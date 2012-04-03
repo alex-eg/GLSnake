@@ -35,13 +35,17 @@ typedef struct {
     Sound Nyam;
 } SApp;
 
+/*--- INITIALIZATION ---*/
+void SInitGraphics(void);
+void SInitApp(SApp *);
+int SInitSdl(SApp *);
+
 /*--- EVENT PROCESSING --- */
 void SOnKeyDown(SApp *, SDLKey, SDLMod, Uint16);
 void SProcessEvent(SApp *, SDL_Event *);
 
 /*--- GRAPHICS ---*/
 void SRender(SApp *);
-void SInitGraphics(void);
 
 /*--- OpenGL Drawing ---*/
 void SCube(int, int, int);
@@ -50,3 +54,4 @@ void SGrid(void);
 /*--- Sound and music! ---*/
 void SInitSound(SApp *);
 void SPlaySound(Sound *);
+

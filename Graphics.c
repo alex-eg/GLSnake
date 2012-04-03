@@ -23,8 +23,8 @@ void SRender(SApp *App)
 void SCube(int x, int y, int size)
 {
     int xc, yc;
-    xc=CELLSIZE*x+(CELLSIZE-    size)/2;
-    yc=CELLSIZE*y+(CELLSIZE-    size)/2;
+    xc=CELLSIZE*x+(CELLSIZE-size)/2;
+    yc=CELLSIZE*y+(CELLSIZE-size)/2;
     
     glPushMatrix();
     glTranslatef(xc, yc, 0);
@@ -94,31 +94,4 @@ void SGrid(void)
 
         glEnd();
     }
-}
-
-void SInitGraphics(void)
-{
-    GLfloat light_position[] = { 0.0, 0.0, 3.0, 0.0 };
-    GLfloat amb[]  = { 0.0, 0.3, 0.3, 0.7 };
-
-    glClearColor (0.0, 0.0, 0.0, 0.0);
-    glShadeModel (GL_SMOOTH);
-
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glLightfv( GL_LIGHT0, GL_AMBIENT , amb  );
-    
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
- 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_COLOR_MATERIAL);
-    
-    glMatrixMode(GL_PROJECTION);
-    glFrustum(-305, 305, 305, -305, 655, 805);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(-CELLSIZE*MATRIXSIZE/2, -CELLSIZE*MATRIXSIZE/2, -804.0f);
-    
-
-   
 }
