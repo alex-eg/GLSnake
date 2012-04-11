@@ -4,14 +4,12 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "Globals.h"
+#include "InGame.h"
 
 int SInit(SApp *);
-void SLoop(SApp *);
 void SCleanup(SApp *);
-
-/*--- LOOP ---*/
-void ProcessNewState(SApp *);
+void SInitApp(SApp *);
+int SInitSdl(SApp *);
 
 int main(int argc, char** argv)
 {
@@ -21,18 +19,18 @@ int main(int argc, char** argv)
     SApp Snake;
 
     if (SInit(&Snake) != 0) {
-        printf("SDL init failed, terminating...\n");
+        printf("Initialization failed, terminating...\n");
         exit(EXIT_FAILURE);
     }
 
     printf("Entering loop...\n");
     while (Snake.Running) {
         while (SDL_PollEvent(&Event)) {
-            SProcessEvent(&Snake, &Event);
+            Snake.State->Class->Event(&Snake.State, &Event);
         }
 
-        SLoop(&Snake);
-        SRender(&Snake);
+        Snake.State->Class->Loop(&Snake.State);
+        Snake.State->Class->Render(&Snake.State);
         SDL_Delay(50);
     }
     printf("Cleaning up... ");
@@ -43,91 +41,49 @@ int main(int argc, char** argv)
 
 int SInit(SApp *App)
 {
-     /*-----------------------------APP---------------------------------------*/
-    SInitApp(App);
     
-    /*------------------------------SDL---------------------------------------*/
     int SdlRet = SInitSdl(App);
-
-    /*------------------------------OGL---------------------------------------*/
-    SInitGraphics();
-
-    /*-----------------------------SOUND--------------------------------------*/
-    SInitSound(App);
-
+    
+    SSetState(App, newSInGame(App));
+    
     return SdlRet;
-}
-
-void SLoop(SApp *App)
-{
-    if ((App->Timer++ >= App->Speed) && (App->State == ingame))
-	ProcessNewState(App);
 }
 
 void SCleanup(SApp *App)
 {
     SDL_FreeSurface(App->SDisplay);
-
-    if (App->Head->next == NULL)
-	free(App->Head);
-    else if (App->Head->next->next == NULL) {
-	free(App->Head->next);
-	free(App->Head);
-    } else {
-	while (App->Head->next != NULL) {
-	    SPoint *curr = App->Head;
-	    SPoint *next = App->Head->next;
-	    while (next->next != NULL) { 
-		curr = next;
-		next = curr->next;
-	    }
-	    free (next);
-	    curr->next = NULL;
-	}
-	free(App->Head);
-    }
     Mix_CloseAudio();
     SDL_Quit();
 }
 
-void ProcessNewState(SApp *App) 
+int SInitSdl(SApp *App)
 {
-    int PrevX = App->Head->x;
-    int PrevY = App->Head->y;
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) return 1;
 
-    App->Head->x+=App->dx;
-    App->Head->y+=App->dy;
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,           8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,          8);
 
-    App->KeyPressed = 0;
-    App->Timer = 0;
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
+    SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
 
-    if (App->Head->x < 0) App->Head->x+=MATRIXSIZE;
-    if (App->Head->y < 0) App->Head->y+=MATRIXSIZE;
-    if (App->Head->x >= MATRIXSIZE) App->Head->x-=MATRIXSIZE;
-    if (App->Head->y >= MATRIXSIZE) App->Head->y-=MATRIXSIZE;
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
+    SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
 
-    if ((App->Head->x == App->Food.x) && (App->Head->y == App->Food.y)) {
-        App->Food.x = rand()%MATRIXSIZE;
-        App->Food.y = rand()%MATRIXSIZE;
-        App->Food.next = NULL;
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  0);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  0);
 
-        SPoint *NewSegment = malloc(sizeof(SPoint));
-        NewSegment->x = PrevX;
-        NewSegment->y = PrevY;
-        NewSegment->next = App->Head->next;
-	App->Head->next = NewSegment;
-
-	SPlaySound(&App->Nyam);
-    } else {
-        SPoint *curr = App->Head;
-        while (curr->next != NULL) {
-            curr = curr->next;
-            int temp = curr->x;
-            curr->x = PrevX;
-            PrevX = temp;
-            temp = curr->y;
-            curr->y = PrevY;
-            PrevY = temp;
-        }
-    }
+    if ((App->SDisplay = SDL_SetVideoMode(CELLSIZE*MATRIXSIZE, CELLSIZE*MATRIXSIZE, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL)) == NULL) return 2;
+    
+    return 0;
 }
+
+void SSetState(SApp *App, void *state)
+{
+    App->state->Class->Cleanup();
+    App->state=state;
+    App->state->Class->Init(App->state);
+};

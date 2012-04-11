@@ -6,14 +6,13 @@
 #define CELLSIZE 36
 #define MATRIXSIZE 20
 
-struct SPoint{
-    int x,y;
-    struct SPoint *next;
-};
-typedef struct SPoint SPoint;
-
-enum state {loading, menu, ingame, paused, highscores};
-typedef enum state state;
+typedef struct {
+    void (* Init)(void *, void *);
+    void (* Loop)(void *);
+    void (* Event)(void *, SDL_Event *);
+    void (* Render)(void *);
+    void (* Cleanup)(void *);
+} State_Class;
 
 typedef struct {
     Mix_Chunk *Snd;
@@ -23,35 +22,8 @@ typedef struct {
 typedef struct {
     int Running;
     SDL_Surface* SDisplay;
-    int dx, dy;
-    SPoint Food;
-    SPoint *Head;
-    int KeyPressed;
-    state State;
-    int Timer;
-    int Speed;
-    //    Sound MainTheme;
-    Mix_Music *Music;
-    Sound Nyam;
+    void *State;
 } SApp;
 
-/*--- INITIALIZATION ---*/
-void SInitGraphics(void);
-void SInitApp(SApp *);
-int SInitSdl(SApp *);
-
-/*--- EVENT PROCESSING --- */
-void SOnKeyDown(SApp *, SDLKey, SDLMod, Uint16);
-void SProcessEvent(SApp *, SDL_Event *);
-
-/*--- GRAPHICS ---*/
-void SRender(SApp *);
-
-/*--- OpenGL Drawing ---*/
-void SCube(int, int, int);
-void SGrid(void);
-
-/*--- Sound and music! ---*/
-void SInitSound(SApp *);
-void SPlaySound(Sound *);
-
+/*--- State Setter  ---*/
+void SSetState(SApp *, void *);
