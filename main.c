@@ -26,11 +26,11 @@ int main(int argc, char** argv)
     printf("Entering loop...\n");
     while (Snake.Running) {
         while (SDL_PollEvent(&Event)) {
-            Snake.State->Class->Event(&Snake.State, &Event);
+            Snake.State->Class->Event(Snake.State, &Event);
         }
 
-        Snake.State->Class->Loop(&Snake.State);
-        Snake.State->Class->Render(&Snake.State);
+        Snake.State->Class->Loop(Snake.State);
+        Snake.State->Class->Render(Snake.State);
         SDL_Delay(50);
     }
     printf("Cleaning up... ");
@@ -43,9 +43,10 @@ int SInit(SApp *App)
 {
     
     int SdlRet = SInitSdl(App);
-    
-    SSetState(App, newSInGame(App));
-    
+    App->State=NULL;
+    SInGame *state = newSInGame(App);
+    SSetState(App, state);
+    App->Running = 1;
     return SdlRet;
 }
 
@@ -53,6 +54,7 @@ void SCleanup(SApp *App)
 {
     SDL_FreeSurface(App->SDisplay);
     Mix_CloseAudio();
+    App->State->Class->Cleanup(App->State);
     SDL_Quit();
 }
 
@@ -81,9 +83,10 @@ int SInitSdl(SApp *App)
     return 0;
 }
 
-void SSetState(SApp *App, void *state)
+void SSetState(SApp *App, SInGame *state)
 {
-    App->state->Class->Cleanup();
-    App->state=state;
-    App->state->Class->Init(App->state);
+    if (App->State)
+	App->State->Class->Cleanup(App->State);
+    App->State = state;
+    App->State->Class->Init(App->State);
 };

@@ -1,33 +1,24 @@
 CC = cc
-CFLAGS = -Wall -O2
+CFLAGS = -Wall -O2 -g
 LIBS = -lSDL -lGL -lSDL_mixer
 
 OBJPATH = ./obj
 BINPATH = ./bin
 
-_OBJ = Main.o Sound.o Graphics.o Events.o Init.o
+_OBJ = Main.o InGame.o
 OBJ = $(patsubst %,$(OBJPATH)/%,$(_OBJ))
 
 clean:
 	rm -f ./*~ ./$(OBJPATH)/*.o ./$(BINPATH)/*
 
-all: dir init events graphics snd main app
+all: dir ingame main app
 
 dir:
 	mkdir -p ./obj
 	mkdir -p ./bin
 
-init:
-	$(CC) -c -o $(OBJPATH)/Init.o Init.c $(LIBS) $(CFLAGS)
-
-events:
-	$(CC) -c -o $(OBJPATH)/Events.o Events.c $(LIBS) $(CFLAGS)
-
-graphics:
-	$(CC) -c -o $(OBJPATH)/Graphics.o Graphics.c $(LIBS) $(CFLAGS)
-
-snd:
-	$(CC) -c -o $(OBJPATH)/Sound.o Sound.c $(LIBS) $(CFLAGS)
+ingame:
+	$(CC) -c -o $(OBJPATH)/InGame.o InGame.c $(LIBS) $(CFLAGS)
 
 main:
 	$(CC) -c -o $(OBJPATH)/Main.o main.c $(LIBS) $(CFLAGS)

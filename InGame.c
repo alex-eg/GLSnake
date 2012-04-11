@@ -19,7 +19,7 @@ void SInGame_Init(SInGame *self)
     self->Timer = 0;
     self->Speed = 3;
     SInGame_InitGraphics();
-    SInGame_InitSound();
+    SInGame_InitSound(self);
     
 }
 
@@ -170,7 +170,15 @@ void SInGame_Grid(void)
     }
 }
 
-void SInGame_Loop(SInGame *self) 
+void SInGame_Loop(SInGame *self)
+{
+    if (self->Timer > self->Speed) {
+	self->Timer = 0;
+	SInGame_ProcessNewState(self);
+    } else self->Timer++;
+}
+
+void SInGame_ProcessNewState(SInGame *self) 
 {
     int PrevX = self->Head->x;
     int PrevY = self->Head->y;
@@ -212,15 +220,14 @@ void SInGame_Loop(SInGame *self)
     }
 }
 
-void SInGame_ProcessEvent(InGame *self, SDL_Event *Event)
+void SInGame_ProcessEvent(SInGame *self, SDL_Event *Event)
 {
     switch (Event->type) {
     case SDL_KEYDOWN : {
-        SInGame_OnKeyDown(Game, Event->key.keysym.sym,Event->key.keysym.mod,Event->key.keysym.unicode);
+        SInGame_OnKeyDown(self, Event->key.keysym.sym,Event->key.keysym.mod,Event->key.keysym.unicode);
         break;
     }
     case SDL_QUIT : {
-	self->Cleanup(self);
         self->App->Running = 0;
         break;
     }
@@ -229,7 +236,7 @@ void SInGame_ProcessEvent(InGame *self, SDL_Event *Event)
     }
 }
 
-void SInGame_OnKeyDown(InGame *self, SDLKey sym, SDLMod mod, Uint16 unicode)
+void SInGame_OnKeyDown(SInGame *self, SDLKey sym, SDLMod mod, Uint16 unicode)
 {
     switch (sym) {
     case 282: { //F1
@@ -308,18 +315,20 @@ void SInGame_Cleanup(SInGame *self)
     }
 
     free(self->Class);
+    free(self);
 }
 
 SInGame *newSInGame(SApp *App)
 {
     SInGame *self = malloc(sizeof(SInGame));
-    self->Class = malloc(sizof(State_Class));
+    self->Class = malloc(sizeof(State_Class));
 
     self->Class->Init = &SInGame_Init;
     self->Class->Loop = &SInGame_Loop;
     self->Class->Event = &SInGame_ProcessEvent;
     self->Class->Render = &SInGame_Render;
-    self->Class->Cleanup = &SInGame_CLeanup;
+    self->Class->Cleanup = &SInGame_Cleanup;
     self->App = App;
+    self->self=self;
     return self;
 }

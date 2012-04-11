@@ -1,26 +1,5 @@
 #include "Globals.h"
 
-struct SPoint{
-    int x,y;
-    struct SPoint *next;
-};
-typedef struct SPoint SPoint;
-
-struct {
-    State_Class *Class;
-
-    Mix_Music *Music;
-    Sound Nyam;
-    SPoint Food;
-    SPoint *Head;
-    int KeyPressed;
-    int Timer;
-    int dx, dy;
-    int Speed;
-    SApp *App;
-} SInGame;
-typedef struct SInGame SInGame;
-
 /*--- INITIALIZATION ---*/
 /* public         */ void SInGame_Init(SInGame *);
 /* static private */ void SInGame_InitGraphics(void);
@@ -31,6 +10,7 @@ typedef struct SInGame SInGame;
 /*--- EVENT PROCESSING --- */
 /* private        */ void SInGame_OnKeyDown(SInGame *, SDLKey, SDLMod, Uint16);
 /* public         */ void SInGame_ProcessEvent(SInGame *, SDL_Event *);
+/* privae         */ void SInGame_ProcessNewState(SInGame *);
 
 /*--- GRAPHICS ---*/
 /*public          */ void SInGame_Render(SInGame *);
