@@ -1,25 +1,25 @@
 #include "InGame.h"
 
-void SInGame_Init(SInGame *self)
+void SInGame_Init(SApp *App)
 {
-    self->Head = malloc(sizeof(SPoint));
-    self->Head->x = 0;
-    self->Head->y = 0;
-    self->Head->next = NULL;
+    App->InGame->Head = malloc(sizeof(SPoint));
+    App->InGame->Head->x = 0;
+    App->InGame->Head->y = 0;
+    App->InGame->Head->next = NULL;
 
-    self->dx = 0;
-    self->dy = 1;
+    App->InGame->dx = 0;
+    App->InGame->dy = 1;
 
-    self->Food.x = rand()%MATRIXSIZE;
-    self->Food.y = rand()%MATRIXSIZE;
-    self->Food.next=NULL;
+    App->InGame->Food.x = rand()%MATRIXSIZE;
+    App->InGame->Food.y = rand()%MATRIXSIZE;
+    App->InGame->Food.next=NULL;
 
-    self->KeyPressed = 0;
+    App->InGame->KeyPressed = 0;
 
-    self->Timer = 0;
-    self->Speed = 3;
+    App->InGame->Timer = 0;
+    App->InGame->Speed = 3;
     SInGame_InitGraphics();
-    SInGame_InitSound(self);
+    SInGame_InitSound(App);
     
 }
 
@@ -47,9 +47,9 @@ void SInGame_InitGraphics(void)
     glTranslatef(-CELLSIZE*MATRIXSIZE/2, -CELLSIZE*MATRIXSIZE/2, -804.0f);
 }
 
-void SInGame_InitSound(SInGame *self)
+void SInGame_InitSound(SApp *App)
 {
-    self->Music = NULL;
+    App->InGame->Music = NULL;
 
     int audio_rate = 22050;
     Uint16 audio_format = AUDIO_S16; /* 16-bit stereo */
@@ -61,11 +61,11 @@ void SInGame_InitSound(SInGame *self)
 	exit(EXIT_FAILURE);
     }
 
-    self->Music = Mix_LoadMUS("./sound/this.ogg");
-    Mix_PlayMusic(self->Music, -1);
+    App->InGame->Music = Mix_LoadMUS("./sound/this.ogg");
+    Mix_PlayMusic(App->InGame->Music, -1);
      
-    self->Nyam.Snd = Mix_LoadWAV("./sound/nom.ogg");
-    self->Nyam.Chnl = -1;
+    App->InGame->Nyam.Snd = Mix_LoadWAV("./sound/nom.ogg");
+    App->InGame->Nyam.Chnl = -1;
 }
 
 void SInGame_PlaySound(Sound *Snd) 
@@ -74,12 +74,12 @@ void SInGame_PlaySound(Sound *Snd)
     Snd->Chnl = -1;
 }
 
-void SInGame_Render(SInGame *self)
+void SInGame_Render(SApp *App)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    if (self->Head->next != NULL) {
-        SPoint *curr = self->Head->next;
+    if (App->InGame->Head->next != NULL) {
+        SPoint *curr = App->InGame->Head->next;
         do {
             glColor3f(0.0, 0.3, 0.8);
             SInGame_Cube(curr->x,curr->y, CUBESIZE);
@@ -87,9 +87,9 @@ void SInGame_Render(SInGame *self)
         } while (curr != NULL);
     }
     glColor3f(0.7, 0.3, 0.1);
-    SInGame_Cube(self->Food.x,self->Food.y, CUBESIZE+1);
+    SInGame_Cube(App->InGame->Food.x,App->InGame->Food.y, CUBESIZE+1);
     glColor3f(0.1, 0.5, 0.5);
-    SInGame_Cube(self->Head->x,self->Head->y, CUBESIZE+2);
+    SInGame_Cube(App->InGame->Head->x,App->InGame->Head->y, CUBESIZE+2);
     SInGame_Grid();
     SDL_GL_SwapBuffers();
 }
@@ -170,44 +170,44 @@ void SInGame_Grid(void)
     }
 }
 
-void SInGame_Loop(SInGame *self)
+void SInGame_Loop(SApp *App)
 {
-    if (self->Timer > self->Speed) {
-	self->Timer = 0;
-	SInGame_ProcessNewState(self);
-    } else self->Timer++;
+    if (App->InGame->Timer > App->InGame->Speed) {
+	App->InGame->Timer = 0;
+	SInGame_ProcessNewState(App);
+    } else App->InGame->Timer++;
 }
 
-void SInGame_ProcessNewState(SInGame *self) 
+void SInGame_ProcessNewState(SApp *App) 
 {
-    int PrevX = self->Head->x;
-    int PrevY = self->Head->y;
+    int PrevX = App->InGame->Head->x;
+    int PrevY = App->InGame->Head->y;
 
-    self->Head->x+=self->dx;
-    self->Head->y+=self->dy;
+    App->InGame->Head->x+=App->InGame->dx;
+    App->InGame->Head->y+=App->InGame->dy;
 
-    self->KeyPressed = 0;
-    self->Timer = 0;
+    App->InGame->KeyPressed = 0;
+    App->InGame->Timer = 0;
 
-    if (self->Head->x < 0) self->Head->x+=MATRIXSIZE;
-    if (self->Head->y < 0) self->Head->y+=MATRIXSIZE;
-    if (self->Head->x >= MATRIXSIZE) self->Head->x-=MATRIXSIZE;
-    if (self->Head->y >= MATRIXSIZE) self->Head->y-=MATRIXSIZE;
+    if (App->InGame->Head->x < 0) App->InGame->Head->x+=MATRIXSIZE;
+    if (App->InGame->Head->y < 0) App->InGame->Head->y+=MATRIXSIZE;
+    if (App->InGame->Head->x >= MATRIXSIZE) App->InGame->Head->x-=MATRIXSIZE;
+    if (App->InGame->Head->y >= MATRIXSIZE) App->InGame->Head->y-=MATRIXSIZE;
 
-    if ((self->Head->x == self->Food.x) && (self->Head->y == self->Food.y)) {
-        self->Food.x = rand()%MATRIXSIZE;
-        self->Food.y = rand()%MATRIXSIZE;
-        self->Food.next = NULL;
+    if ((App->InGame->Head->x == App->InGame->Food.x) && (App->InGame->Head->y == App->InGame->Food.y)) {
+        App->InGame->Food.x = rand()%MATRIXSIZE;
+        App->InGame->Food.y = rand()%MATRIXSIZE;
+        App->InGame->Food.next = NULL;
 
         SPoint *NewSegment = malloc(sizeof(SPoint));
         NewSegment->x = PrevX;
         NewSegment->y = PrevY;
-        NewSegment->next = self->Head->next;
-	self->Head->next = NewSegment;
+        NewSegment->next = App->InGame->Head->next;
+	App->InGame->Head->next = NewSegment;
 
-	SInGame_PlaySound(&self->Nyam);
+	SInGame_PlaySound(&App->InGame->Nyam);
     } else {
-        SPoint *curr = self->Head;
+        SPoint *curr = App->InGame->Head;
         while (curr->next != NULL) {
             curr = curr->next;
             int temp = curr->x;
@@ -220,15 +220,15 @@ void SInGame_ProcessNewState(SInGame *self)
     }
 }
 
-void SInGame_ProcessEvent(SInGame *self, SDL_Event *Event)
+void SInGame_ProcessEvent(SApp *App, SDL_Event *Event)
 {
     switch (Event->type) {
     case SDL_KEYDOWN : {
-        SInGame_OnKeyDown(self, Event->key.keysym.sym,Event->key.keysym.mod,Event->key.keysym.unicode);
+        SInGame_OnKeyDown(App, Event->key.keysym.sym,Event->key.keysym.mod,Event->key.keysym.unicode);
         break;
     }
     case SDL_QUIT : {
-        self->App->Running = 0;
+        App->Running = 0;
         break;
     }
     default:
@@ -236,65 +236,66 @@ void SInGame_ProcessEvent(SInGame *self, SDL_Event *Event)
     }
 }
 
-void SInGame_OnKeyDown(SInGame *self, SDLKey sym, SDLMod mod, Uint16 unicode)
+void SInGame_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
 {
     switch (sym) {
     case 282: { //F1
-	self->dx=0;
-	self->dy=0;
+	App->InGame->dx=0;
+	App->InGame->dy=0;
 	break;
     }
 	/*    case 27: { //ESC
-	if (self->State==ingame) self->State=paused;
-	else self->State=ingame;
+	if (App->InGame->State==ingame) App->InGame->State=paused;
+	else App->InGame->State=ingame;
         break;
 	}*/
     case 119: { //W
-        if ((self->dy == 0) && !self->KeyPressed) {
-            self->dy = -1;
-            self->dx = 0;
-	    self->KeyPressed = 1;
+        if ((App->InGame->dy == 0) && !App->InGame->KeyPressed) {
+            App->InGame->dy = -1;
+            App->InGame->dx = 0;
+	    App->InGame->KeyPressed = 1;
         } else break;
         break;
     }
     case 97: { //A
-        if ((self->dx == 0) && !self->KeyPressed) {
-            self->dy = 0;
-            self->dx = -1;
-	    self->KeyPressed = 1;
+        if ((App->InGame->dx == 0) && !App->InGame->KeyPressed) {
+            App->InGame->dy = 0;
+            App->InGame->dx = -1;
+	    App->InGame->KeyPressed = 1;
         } else break;
         break;
     }
     case 115: { //S
-        if ((self->dy == 0) && !self->KeyPressed) {
-            self->dy = 1;
-            self->dx = 0;
-	    self->KeyPressed = 1;
+        if ((App->InGame->dy == 0) && !App->InGame->KeyPressed) {
+            App->InGame->dy = 1;
+            App->InGame->dx = 0;
+	    App->InGame->KeyPressed = 1;
         } else break;
         break;
     }
     case 100: { //D
-        if ((self->dx == 0) && !self->KeyPressed) {
-            self->dy = 0;
-            self->dx = 1;
-	    self->KeyPressed = 1;
+        if ((App->InGame->dx == 0) && !App->InGame->KeyPressed) {
+            App->InGame->dy = 0;
+            App->InGame->dx = 1;
+	    App->InGame->KeyPressed = 1;
         } else break;
         break;
     }
     case 270: { //Num+
-	self->Speed--;
+	App->InGame->Speed--;
 	break;
     }
     case 269: { ///Num-
-	self->Speed++;
+	App->InGame->Speed++;
 	break;
     }
     default: break;
     }
 }
 
-void SInGame_Cleanup(SInGame *self)
+void SInGame_Delete(SApp *App)
 {
+    SInGame *self = App->InGame;
     if (self->Head->next == NULL)
 	free(self->Head);
     else if (self->Head->next->next == NULL) {
@@ -314,21 +315,25 @@ void SInGame_Cleanup(SInGame *self)
 	free(self->Head);
     }
 
-    free(self->Class);
     free(self);
+    App->InGame = NULL;
 }
 
-SInGame *newSInGame(SApp *App)
+SInGame* SInGame_Create(SApp *App)
 {
-    SInGame *self = malloc(sizeof(SInGame));
-    self->Class = malloc(sizeof(State_Class));
-
-    self->Class->Init = &SInGame_Init;
-    self->Class->Loop = &SInGame_Loop;
-    self->Class->Event = &SInGame_ProcessEvent;
-    self->Class->Render = &SInGame_Render;
-    self->Class->Cleanup = &SInGame_Cleanup;
+    SInGame *self;
+    App->InGame = self = (SInGame *) malloc(sizeof(SInGame));
+    
     self->App = App;
-    self->self=self;
+    self->self = self;
     return self;
+}
+
+void SInGame_Switch(SApp *App)
+{
+    App->State->Init = &SInGame_Init;
+    App->State->Loop = &SInGame_Loop;
+    App->State->Event = &SInGame_ProcessEvent;
+    App->State->Render = &SInGame_Render;
+    App->State->Cleanup = &SInGame_Delete;
 }

@@ -1,4 +1,7 @@
-/*--- HINT! Compile with "gcc -o snake main.c -lSDL -lGL" ---*/
+/*--- HINT! Compile with "gcc -o snake main.c -lSDL -lGL" ---
+      Screw that ^, use the allmighty GNUMake!
+
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,11 +29,10 @@ int main(int argc, char** argv)
     printf("Entering loop...\n");
     while (Snake.Running) {
         while (SDL_PollEvent(&Event)) {
-            Snake.State->Class->Event(Snake.State, &Event);
+            Snake.State->Event(&Snake, &Event);
         }
-
-        Snake.State->Class->Loop(Snake.State);
-        Snake.State->Class->Render(Snake.State);
+        Snake.State->Loop(&Snake);
+        Snake.State->Render(&Snake);
         SDL_Delay(50);
     }
     printf("Cleaning up... ");
@@ -41,11 +43,11 @@ int main(int argc, char** argv)
 
 int SInit(SApp *App)
 {
-    
     int SdlRet = SInitSdl(App);
-    App->State=NULL;
-    SInGame *state = newSInGame(App);
-    SSetState(App, state);
+    App->State = malloc(sizeof(vtable_State));
+    App->InGame = SInGame_Create(App);
+    SInGame_Switch(App);
+    App->State->Init(App);
     App->Running = 1;
     return SdlRet;
 }
@@ -54,7 +56,7 @@ void SCleanup(SApp *App)
 {
     SDL_FreeSurface(App->SDisplay);
     Mix_CloseAudio();
-    App->State->Class->Cleanup(App->State);
+    App->State->Cleanup(App);
     SDL_Quit();
 }
 
@@ -82,11 +84,3 @@ int SInitSdl(SApp *App)
     
     return 0;
 }
-
-void SSetState(SApp *App, SInGame *state)
-{
-    if (App->State)
-	App->State->Class->Cleanup(App->State);
-    App->State = state;
-    App->State->Class->Init(App->State);
-};
