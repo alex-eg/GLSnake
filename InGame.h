@@ -16,14 +16,6 @@ typedef struct {
 
 
 /*-----------------------------------------------*/
-/*typedef struct vtable_SInGame {
-    void (* Init)(SApp *);
-    void (* Loop)(SApp *);
-    void (* Event)(SApp *, SDL_Event *);
-    void (* Render)(SApp *);
-    } vtable_SInGame;*/
-
-/*-----------------------------------------------*/
 struct SInGame {
     struct SInGame *self;
 
