@@ -9,7 +9,7 @@ Constructor allocates space for state struct (obviously) and also links main app
 Destructor frees all memory owned by the state and assigns NULL to pointer to that state inside the main app.
 Swither simply reassigns all five loop processing functions to functions corresponded to current state. Useful for states like 'Pause'.
 
-All static and private functions may have any number and type of arguments, but main flow processing functions must follow convention as described below:
+All static and private functions may have any number and type of arguments, but main flow processing functions must follow the convention described below:
 
 struct vtable_State{
     void (* Init)(SApp *);
