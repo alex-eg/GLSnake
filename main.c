@@ -8,6 +8,7 @@
 #include <time.h>
 
 #include "InGame.h"
+#include "Paused.h"
 
 int SInit(SApp *);
 void SCleanup(SApp *);
@@ -44,9 +45,14 @@ int main(int argc, char** argv)
 int SInit(SApp *App)
 {
     int SdlRet = SInitSdl(App);
+    App->InGame = NULL;
+    App->Paused = NULL;
     App->State = malloc(sizeof(vtable_State));
-    App->InGame = SInGame_Create(App);
+
+    SInGame_Create(App);
+    SPaused_Create(App);
     SInGame_Switch(App);
+
     App->State->Init(App);
     App->Running = 1;
     return SdlRet;

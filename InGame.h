@@ -1,3 +1,6 @@
+#ifndef _S_INGAME
+#define _S_INGAME
+
 #include "Globals.h"
 
 /*-----------------------------------------------*/
@@ -17,7 +20,6 @@ typedef struct {
 
 /*-----------------------------------------------*/
 struct SInGame {
-    struct SInGame *self;
 
     SApp *App;
 
@@ -57,7 +59,8 @@ typedef struct SInGame SInGame;
 /* static          */ void SInGame_PlaySound(Sound *);
 /* public          */ void SInGame_Cleanup(SApp *);
 
-/* constructor     */ SInGame* SInGame_Create(SApp *);
+/* constructor     */ void SInGame_Create(SApp *);
 /* destructor      */ void SInGame_Delete(SApp *);
 
 /* switcher        */ void SInGame_Switch(SApp *);
+#endif

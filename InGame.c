@@ -1,4 +1,5 @@
 #include "InGame.h"
+#include "Paused.h"
 
 void SInGame_Init(SApp *App)
 {
@@ -17,7 +18,7 @@ void SInGame_Init(SApp *App)
     App->InGame->KeyPressed = 0;
 
     App->InGame->Timer = 0;
-    App->InGame->Speed = 3;
+    App->InGame->Speed = 1;
     SInGame_InitGraphics();
     SInGame_InitSound(App);
     
@@ -239,53 +240,53 @@ void SInGame_ProcessEvent(SApp *App, SDL_Event *Event)
 void SInGame_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
 {
     switch (sym) {
-    case 282: { //F1
+    case SDLK_F1: { //F1
 	App->InGame->dx=0;
 	App->InGame->dy=0;
 	break;
     }
-	/*    case 27: { //ESC
-	if (App->InGame->State==ingame) App->InGame->State=paused;
-	else App->InGame->State=ingame;
-        break;
-	}*/
-    case 119: { //W
+    case SDLK_ESCAPE: { //ESC
+	SPaused_Switch(App);
+	App->State->Init(App);
+	break;
+    }
+    case SDLK_UP: { //UP Arrow
         if ((App->InGame->dy == 0) && !App->InGame->KeyPressed) {
             App->InGame->dy = -1;
             App->InGame->dx = 0;
 	    App->InGame->KeyPressed = 1;
-        } else break;
+        };
         break;
     }
-    case 97: { //A
+    case SDLK_LEFT: { //LEFT Arrow
         if ((App->InGame->dx == 0) && !App->InGame->KeyPressed) {
             App->InGame->dy = 0;
             App->InGame->dx = -1;
 	    App->InGame->KeyPressed = 1;
-        } else break;
+        };
         break;
     }
-    case 115: { //S
+    case SDLK_DOWN: { //DOWN Arrow
         if ((App->InGame->dy == 0) && !App->InGame->KeyPressed) {
             App->InGame->dy = 1;
             App->InGame->dx = 0;
 	    App->InGame->KeyPressed = 1;
-        } else break;
+        };
         break;
     }
-    case 100: { //D
+    case SDLK_RIGHT: { //RIGHT Arrow
         if ((App->InGame->dx == 0) && !App->InGame->KeyPressed) {
             App->InGame->dy = 0;
             App->InGame->dx = 1;
 	    App->InGame->KeyPressed = 1;
-        } else break;
+        };
         break;
     }
-    case 270: { //Num+
+    case SDLK_KP_PLUS: { //Num+
 	App->InGame->Speed--;
 	break;
     }
-    case 269: { ///Num-
+    case SDLK_KP_MINUS: { ///Num-
 	App->InGame->Speed++;
 	break;
     }
@@ -319,14 +320,11 @@ void SInGame_Delete(SApp *App)
     App->InGame = NULL;
 }
 
-SInGame* SInGame_Create(SApp *App)
+void SInGame_Create(SApp *App)
 {
     SInGame *self;
     App->InGame = self = (SInGame *) malloc(sizeof(SInGame));
-    
     self->App = App;
-    self->self = self;
-    return self;
 }
 
 void SInGame_Switch(SApp *App)
