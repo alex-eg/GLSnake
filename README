@@ -1,6 +1,6 @@
 ***---This is not so stub readme file. But it looks more like notes to future selfs---***
 
-Dear future me, since the project have started to become more complicated, a certain convention uprose.
+Dear future me, since the project had started to become more complicated, a certain convention uprose.
 
 State structures are accesed via pointers stored in main app structure.
 
@@ -19,8 +19,12 @@ struct vtable_State{
     void (* Cleanup)(SApp *);
 };
 
+(Looks like interface)
+
 TODO:
 1. Reinvent glutLookAt, using glFrustum is overkill
 2. Implement camera object
+3. Add settings.ini
+4. Implement log system
 
 And make all is your friend.

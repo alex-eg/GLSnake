@@ -54,7 +54,7 @@ typedef struct SInGame SInGame;
 /* static         */ void SInGame_Cube(int, int, int);
 /* static         */ void SInGame_Grid(void);
 
-/*--- Sound and music! ---*/
+/*--- Sound and music ---*/
 /* private         */ void SInGame_InitSound(SApp *);
 /* static          */ void SInGame_PlaySound(Sound *);
 /* public          */ void SInGame_Cleanup(SApp *);
