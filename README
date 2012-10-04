@@ -7,7 +7,7 @@ State structures are accesed via pointers stored in main app structure.
 Each game state must have constructor, destructor, and switcher functions. 
 Constructor allocates space for state struct (obviously) and also links main app and newly created state with each other via pointers (that seems redundand, though).
 Destructor frees all memory owned by the state and assigns NULL to pointer to that state inside the main app.
-Swither simply reassigns all five loop processing functions to functions corresponded to current state. Useful for states like 'Pause'.
+Switcher simply reassigns all five loop processing functions to functions corresponded to current state. Useful for states like 'Pause'.
 
 All static and private functions may have any number and type of arguments, but main flow processing functions must follow the convention described below:
 
@@ -17,6 +17,8 @@ struct vtable_State{
     void (* Event)(SApp *, SDL_Event *);
     void (* Render)(SApp *);
     void (* Cleanup)(SApp *);
+    void (* Create)(SApp *);
+    void (* Switch)(SApp *);
 };
 
 (Looks like interface)
@@ -28,3 +30,6 @@ TODO:
 4. Implement log system
 
 And make all is your friend.
+
+II. Dear past me, you was ignorant arrogant asshole. Now when I have to refactor your shiny code I understang this clearly.
+c:

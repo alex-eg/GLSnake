@@ -1,5 +1,5 @@
 /*--- HINT! Compile with "gcc -o snake main.c -lSDL -lGL" ---
-      Screw that ^, use the allmighty GNUMake!
+      Disregard that ^, use the allmighty GNUMake!
 
  */
 

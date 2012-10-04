@@ -1,6 +1,6 @@
 CC = cc
-CFLAGS = -Wall -O2 -g -pg
-LIBS = -lSDL -lGL -lSDL_mixer
+CFLAGS = -Wall -g -pg -O2
+LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf
 
 OBJPATH = ./obj
 BINPATH = ./bin
@@ -28,3 +28,5 @@ main:
 
 app:
 	$(CC) -o $(BINPATH)/Snake $(OBJ) $(LIBS) $(CFLAGS)
+
+.PHONY: clean
