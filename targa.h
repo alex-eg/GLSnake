@@ -14,11 +14,11 @@ typedef uint16_t TGAshort;
 typedef uint32_t TGAlong;
 typedef uint8_t TGAASCII;
 
-#pragma pack(1)
+#pragma pack(1) /* No padding is needed! */
 /*---== TGA Header ==---*/ /* Field numbers according to the specification */
 struct STGAHeader {
     TGAbyte IDlength;      /* 1 */
-    TGAbyte colorMapType;  /* 2. 0 - color map is not included, 1 - color map is included */
+    TGAbyte colorMapType;  /* 2; 0 - color map is not included, 1 - color map is included */
     TGAbyte imageType;     /* 3 */
     
     /*-= Color Map Spec - 5 bytes =-*/
@@ -81,6 +81,7 @@ struct STGAFooter {
 typedef struct STGAFooter STGAFooter;
 
 #pragma pack() /* was pack(1) */
+
 /*---== TGA File ==---*/
 struct STGAFile {
     STGAHeader *header;
@@ -116,10 +117,13 @@ int isNewTga(char *filename); /* determine if given file is usable TGA file */
 int readTgaFromFile(char *filename);
 char * getErrorDescription(int);
 
-void printFooter(STGAFooter *footer);
-
 static int readHeader(STGAHeader *, FILE *from);
 static int readFooter(STGAFooter *, FILE *from);
-static int readImage(STGAImage *, int imageLength, FILE *from);
+static int readImage(STGAImage *, STGAHeader *, FILE *from);
+
+
+void printFooter(STGAFooter *);
+void printHeader(STGAHeader *);
+static TGAASCII const * printBits(TGAbyte);
 
 #endif /* ifndef _S_TGA */
