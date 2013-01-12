@@ -5,7 +5,7 @@ LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf
 OBJPATH = ./obj
 BINPATH = ./bin
 
-_OBJ = main.o inGame.o paused.o
+_OBJ = main.o inGame.o paused.o gui.o
 OBJ = $(patsubst %,$(OBJPATH)/%,$(_OBJ))
 
 clean:
@@ -16,6 +16,12 @@ all: dir ingame paused main app
 dir:
 	mkdir -p ./obj
 	mkdir -p ./bin
+
+gui: gui.c
+	$(CC) -c -o $(OBJPATH)/gui.o gui.c $(LIBS) $(CFLAGS)
+
+targa: targa.c
+	$(CC) -c -o $(OBJPATH)/$@.o $@.c $(LIBS) $(CFLAGS)
 
 paused: paused.c
 	$(CC) -c -o $(OBJPATH)/paused.o paused.c $(LIBS) $(CFLAGS)
