@@ -84,11 +84,11 @@ typedef struct STGAFooter STGAFooter;
 
 /*---== TGA File ==---*/
 struct STGAFile {
-    STGAHeader *header;
-    STGAImage *image;
-    STGADevArea *devArea;
-    STGAExtArea *extArea;
-    STGAFooter *footer;
+    STGAHeader header;
+    STGAImage image;
+    STGADevArea devArea;
+    STGAExtArea extArea;
+    STGAFooter footer;
 };
 typedef struct STGAFile STGAFile;
 
@@ -98,32 +98,35 @@ enum STGAError {
     E_INVALID_FILE,
     E_INVALID_FOOTER,
     E_INVALID_HEADER,
-    E_NOT_A_TGA
+    E_NOT_A_TGA,
+    E_IMAGE_TYPE_NOT_SUPPORTED
 };
 
 struct _STGAErrorDescription {
     int errorCode;
     char *errorMessage;
 } STGAErrorDescription [] = {
-    { E_SUCCESS,              "No error"                },
-    { E_INVALID_FILE,         "Cannot read file"        },
-    { E_INVALID_FOOTER,       "Cannot read footer"      },
-    { E_INVALID_HEADER,       "Cannot read header"      },
-    { E_NOT_A_TGA,            "Given file is not a valid TGA" }
+    { E_SUCCESS,                  "No error"                },
+    { E_INVALID_FILE,             "Cannot read file"        },
+    { E_INVALID_FOOTER,           "Cannot read footer"      },
+    { E_INVALID_HEADER,           "Cannot read header"      },
+    { E_NOT_A_TGA,                "Given file is not a valid TGA" },
+    { E_IMAGE_TYPE_NOT_SUPPORTED, "TGA Image Type is not supported" }
 };
 
 /*---== TGA Functions ==---*/
-int isNewTga(char *filename); /* determine if given file is usable TGA file */
-int readTgaFromFile(char *filename);
+
+int readTgaFromFile(char *filename, STGAFile *);
 char * getErrorDescription(int);
 
+static int isNotNewTga(char *filename); /* determine if given file is usable TGA file */
 static int readHeader(STGAHeader *, FILE *from);
 static int readFooter(STGAFooter *, FILE *from);
-static int readImage(STGAImage *, STGAHeader *, FILE *from);
+static int readImage(STGAFile *, FILE *from);
 
 
-void printFooter(STGAFooter *);
-void printHeader(STGAHeader *);
+static void printFooter(STGAFooter *);
+static void printHeader(STGAHeader *);
 static TGAASCII const * printBits(TGAbyte);
 
 #endif /* ifndef _S_TGA */

@@ -1,6 +1,23 @@
 #include "targa.h"
 
-int isNewTga(char *filename)
+char * getErrorDescription(int errorCode)
+{
+    return STGAErrorDescription[errorCode].errorMessage;
+}
+
+int readTgaFromFile(char *filename, STGAFile *file)
+{
+    FILE *in;
+    if (isNotNewTga(filename)) return E_NOT_A_TGA;
+    if (!(in = fopen(filename, "rb"))) return E_INVALID_FILE;
+    if (readFooter(&file->footer, in)) return E_INVALID_FOOTER;
+    if (readHeader(&file->header, in)) return E_INVALID_HEADER;
+    if (readImage(file, in)) return E_IMAGE_TYPE_NOT_SUPPORTED;
+
+    return E_SUCCESS;
+}
+
+static int isNotNewTga(char *filename)
 {
     FILE *in;
     STGAFooter footer;
@@ -12,7 +29,7 @@ int isNewTga(char *filename)
     if (memcmp("TRUEVISION-XFILE", footer.signature, sizeof(TGAbyte)*16)) return E_NOT_A_TGA;
     
     fclose(in);
-    return 0;
+    return E_SUCCESS;
 }
 
 static int readFooter(STGAFooter *footer, FILE *from)
@@ -26,6 +43,20 @@ static int readHeader(STGAHeader *header, FILE *from)
 {
     rewind(from);
     if (fread(header, sizeof(STGAHeader), 1, from) != 1) return E_INVALID_HEADER;
+    return E_SUCCESS;
+}
+
+static int readImage(STGAFile *file, FILE *from)
+{
+    STGAHeader *header = &file->header;
+    STGAImage *image = &file->image;
+    if (fseek(from, sizeof(STGAHeader), SEEK_SET)) return E_INVALID_FILE;
+    if (header->imageType != 2) return E_IMAGE_TYPE_NOT_SUPPORTED;
+    TGAshort w = header->width, h = header->height;
+    TGAbyte bpp = header->pixelDepth;
+    image->imageData = malloc(w * h * bpp * sizeof(TGAbyte));
+    fread(image->imageData, w * h * bpp * sizeof(TGAbyte), 1, from);
+    image->imageID = image->colorMapData = image->imageData;
     return E_SUCCESS;
 }
 
@@ -45,7 +76,7 @@ static TGAASCII const * printBits(TGAbyte num)
     return res;
 }
 
-void printFooter(STGAFooter *footer)
+static void printFooter(STGAFooter *footer)
 {
     printf(" 28 Extension Area Offset:\t%d\n", footer->extAreaOffset);
     printf(" 29 Developer Directory Offset: %d\n", footer->devDirectoryOffset);
@@ -57,7 +88,7 @@ void printFooter(STGAFooter *footer)
     printf(" 32 Null terminator:\t\t$(%d)\n", footer->terminator);
 }
 
-void printHeader(STGAHeader *header)
+static void printHeader(STGAHeader *header)
 {
     printf("  1 ID Length:\t\t\t%d\n", header->IDlength);
     printf("  2 Color Map Type:\t\t%d\n", header->colorMapType);
@@ -65,7 +96,7 @@ void printHeader(STGAHeader *header)
 
     printf("---=== 4. Color Map Specification ===---\n");
     printf("4.1 First Entry Index:\t\t%d\n", header->firstEntryIndex);
-    printf("4.2 Color Map Length:\t\t%d\n", header->imageType);
+    printf("4.2 Color Map Length:\t\t%d\n", header->colorMapLength);
     printf("4.3 Color Map Entry Size:\t%d\n", header->colorMapEntrySize);
 
     printf("---===   5. Image Specification   ===---\n");
@@ -77,11 +108,6 @@ void printHeader(STGAHeader *header)
     printf("5.6 Image Descriptor:\t\t%s\n", printBits(header->imageDescriptor));
 }
 
-char * getErrorDescription(int errorCode)
-{
-    return STGAErrorDescription[errorCode].errorMessage;
-}
-
 /* Compile with -DTGA_TEST into executable to perform tests */
 #ifdef TGA_TEST
 int main(int argc, char **argv)
@@ -91,7 +117,7 @@ int main(int argc, char **argv)
 	printf("No tga file provided for test, aborting.\n");
 	return 0;
     }
-    if (result = isNewTga(argv[1])) {
+    if (result = isNotNewTga(argv[1])) {
 	printf("Failed to recognize file, error: %s\n", getErrorDescription(result));
 	return 0;
     }
