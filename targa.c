@@ -25,7 +25,7 @@ static int isNotNewTga(char *filename)
     int error;
 
     if (!(in = fopen(filename, "rb"))) return E_INVALID_FILE;
-    if (error = readFooter(&footer, in)) return error;
+    if ((error = readFooter(&footer, in))) return error;
     if (memcmp("TRUEVISION-XFILE", footer.signature, sizeof(TGAbyte)*16)) return E_NOT_A_TGA;
     
     fclose(in);
@@ -53,7 +53,7 @@ static int readImage(STGAFile *file, FILE *from)
     if (fseek(from, sizeof(STGAHeader), SEEK_SET)) return E_INVALID_FILE;
     if (header->imageType != 2) return E_IMAGE_TYPE_NOT_SUPPORTED;
     TGAshort w = header->width, h = header->height;
-    TGAbyte bpp = header->pixelDepth;
+    TGAbyte bpp = header->pixelDepth / 8;
     image->imageData = malloc(w * h * bpp * sizeof(TGAbyte));
     fread(image->imageData, w * h * bpp * sizeof(TGAbyte), 1, from);
     image->imageID = image->colorMapData = image->imageData;

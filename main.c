@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "InGame.h"
-#include "Paused.h"
+#include "ingame.h"
+#include "paused.h"
 
 int SInit(SApp *);
 void SCleanup(SApp *);

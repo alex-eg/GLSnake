@@ -102,7 +102,7 @@ enum STGAError {
     E_IMAGE_TYPE_NOT_SUPPORTED
 };
 
-struct _STGAErrorDescription {
+static struct _STGAErrorDescription {
     int errorCode;
     char *errorMessage;
 } STGAErrorDescription [] = {
@@ -119,6 +119,7 @@ struct _STGAErrorDescription {
 int readTgaFromFile(char *filename, STGAFile *);
 char * getErrorDescription(int);
 
+#ifdef TGA_COMPILE
 static int isNotNewTga(char *filename); /* determine if given file is usable TGA file */
 static int readHeader(STGAHeader *, FILE *from);
 static int readFooter(STGAFooter *, FILE *from);
@@ -128,5 +129,6 @@ static int readImage(STGAFile *, FILE *from);
 static void printFooter(STGAFooter *);
 static void printHeader(STGAHeader *);
 static TGAASCII const * printBits(TGAbyte);
+#endif
 
 #endif /* ifndef _S_TGA */

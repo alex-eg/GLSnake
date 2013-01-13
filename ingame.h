@@ -1,7 +1,8 @@
 #ifndef _S_INGAME
 #define _S_INGAME
 
-#include "Globals.h"
+#include "globals.h"
+#include "targa.h"
 
 /*-----------------------------------------------*/
 struct SPoint {
@@ -31,6 +32,7 @@ struct SInGame {
     int Timer;
     int dx, dy;
     int Speed;
+    STGAFile textureFile;
 };
 typedef struct SInGame SInGame;
 

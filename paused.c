@@ -1,5 +1,5 @@
-#include "Paused.h"
-#include "InGame.h"
+#include "paused.h"
+#include "ingame.h"
 
 void SPaused_Init(SApp *App)
 {

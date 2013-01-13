@@ -1,7 +1,7 @@
 #ifndef _S_PAUSED
 #define _S_PAUSED
 
-#include "Globals.h"
+#include "globals.h"
 #include <SDL/SDL_ttf.h>
 #include <math.h>
 

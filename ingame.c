@@ -1,5 +1,5 @@
-#include "InGame.h"
-#include "Paused.h"
+#include "ingame.h"
+#include "paused.h"
 
 void SInGame_Init(SApp *App)
 {
@@ -21,7 +21,17 @@ void SInGame_Init(SApp *App)
     App->InGame->Speed = 1;
     SInGame_InitGraphics();
     SInGame_InitSound(App);
-    
+
+    /*!! TEXTURE TEST !!*/
+    readTgaFromFile("./hana.tga", &App->InGame->textureFile);
+    glBindTexture(GL_TEXTURE_2D, 1);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, App->InGame->textureFile.image.imageData);
 }
 
 void SInGame_InitGraphics(void)
@@ -62,11 +72,12 @@ void SInGame_InitSound(SApp *App)
 	exit(EXIT_FAILURE);
     }
 
+    /*
     App->InGame->Music = Mix_LoadMUS("./sound/this.ogg");
     Mix_PlayMusic(App->InGame->Music, -1);
      
     App->InGame->Nyam.Snd = Mix_LoadWAV("./sound/nom.ogg");
-    App->InGame->Nyam.Chnl = -1;
+    App->InGame->Nyam.Chnl = -1;*/
 }
 
 void SInGame_PlaySound(Sound *Snd) 
@@ -103,6 +114,8 @@ void SInGame_Cube(int x, int y, int size)
     
     glPushMatrix();
     glTranslatef(xc, yc, 0);
+
+    glBindTexture (GL_TEXTURE_2D, 1);
     glBegin(GL_QUADS);
         
     /* BOTTOM */
@@ -142,9 +155,17 @@ void SInGame_Cube(int x, int y, int size)
 
     /* TOP */
     glNormal3d(0,0,1);
+
+    glTexCoord2f (0.0, 0.0);
     glVertex3d(       0,        0,     size);
+
+    glTexCoord2f (0.0, 1.0);
     glVertex3d(       0,     size,     size);
+
+    glTexCoord2f (1.0, 1.0);
     glVertex3d(    size,     size,     size);
+
+    glTexCoord2f (1.0, 0.0);
     glVertex3d(    size,        0,     size);
 
     glEnd();
