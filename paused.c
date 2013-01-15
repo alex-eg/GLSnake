@@ -198,13 +198,13 @@ void SPaused_RenderText(SPaused *self, const char *text, SDL_Rect *location, SDL
     /* Draw a texture quad at location */
     glBegin(GL_QUADS);
 
-    glTexCoord2f(0.0f, 1.0f); 
+    glTexCoord2f(0.0f, 1.0f);
     glVertex2f(location->x    , location->y);
-    glTexCoord2f(1.0f, 1.0f); 
+    glTexCoord2f(1.0f, 1.0f);
     glVertex2f(location->x + w, location->y);
-    glTexCoord2f(1.0f, 0.0f); 
+    glTexCoord2f(1.0f, 0.0f);
     glVertex2f(location->x + w, location->y + h);
-    glTexCoord2f(0.0f, 0.0f); 
+    glTexCoord2f(0.0f, 0.0f);
     glVertex2f(location->x    , location->y + h);
     glEnd();
 	

@@ -99,7 +99,8 @@ enum STGAError {
     E_INVALID_FOOTER,
     E_INVALID_HEADER,
     E_NOT_A_TGA,
-    E_IMAGE_TYPE_NOT_SUPPORTED
+    E_IMAGE_TYPE_NOT_SUPPORTED,
+    E_CANNOT_READ_DATA
 };
 
 static struct _STGAErrorDescription {
@@ -111,7 +112,8 @@ static struct _STGAErrorDescription {
     { E_INVALID_FOOTER,           "Cannot read footer"      },
     { E_INVALID_HEADER,           "Cannot read header"      },
     { E_NOT_A_TGA,                "Given file is not a valid TGA" },
-    { E_IMAGE_TYPE_NOT_SUPPORTED, "TGA Image Type is not supported" }
+    { E_IMAGE_TYPE_NOT_SUPPORTED, "TGA Image Type is not supported" },
+    { E_CANNOT_READ_DATA, "Cannot read data" }
 };
 
 /*---== TGA Functions ==---*/

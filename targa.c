@@ -8,11 +8,12 @@ char * getErrorDescription(int errorCode)
 int readTgaFromFile(char *filename, STGAFile *file)
 {
     FILE *in;
-    if (isNotNewTga(filename)) return E_NOT_A_TGA;
+    int res;
+    if (res = isNotNewTga(filename)) return E_NOT_A_TGA;
     if (!(in = fopen(filename, "rb"))) return E_INVALID_FILE;
-    if (readFooter(&file->footer, in)) return E_INVALID_FOOTER;
-    if (readHeader(&file->header, in)) return E_INVALID_HEADER;
-    if (readImage(file, in)) return E_IMAGE_TYPE_NOT_SUPPORTED;
+    if (res = readFooter(&file->footer, in)) return res;
+    if (res = readHeader(&file->header, in)) return res;
+    if (res = readImage(file, in)) return res;
 
     return E_SUCCESS;
 }
@@ -55,7 +56,8 @@ static int readImage(STGAFile *file, FILE *from)
     TGAshort w = header->width, h = header->height;
     TGAbyte bpp = header->pixelDepth / 8;
     image->imageData = malloc(w * h * bpp * sizeof(TGAbyte));
-    fread(image->imageData, w * h * bpp * sizeof(TGAbyte), 1, from);
+    printf("Allocating %lu bytyes for the image %dx%d pixels\n", w * h * bpp * sizeof(TGAbyte), w, h);
+    if (fread(image->imageData, sizeof(TGAbyte), w * h * bpp, from) != (w * h * bpp)) return E_CANNOT_READ_DATA;
     image->imageID = image->colorMapData = image->imageData;
     return E_SUCCESS;
 }

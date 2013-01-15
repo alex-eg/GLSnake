@@ -33,6 +33,7 @@ struct SInGame {
     int dx, dy;
     int Speed;
     STGAFile textureFile;
+    GLuint texture;
 };
 typedef struct SInGame SInGame;
 
@@ -53,7 +54,7 @@ typedef struct SInGame SInGame;
 /* public         */ void SInGame_Render(SApp *);
 
 /*--- OpenGL Drawing ---*/
-/* static         */ void SInGame_Cube(int, int, int);
+/* static         */ void SInGame_Cube(SApp *, int, int, int);
 /* static         */ void SInGame_Grid(void);
 
 /*--- Sound and music ---*/

@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -g -pg -O2 -std=c99
+CFLAGS = -g -pg -O2 -std=c99
 LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf
 
 OBJPATH = ./obj
