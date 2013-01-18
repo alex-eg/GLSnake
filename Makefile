@@ -19,7 +19,7 @@ $(OBJPATH)/%.o : $(SRCPATH)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS) 
 
 snake: $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $(BINPATH)/$@ $(LIBS) $(CFLAGS)
+	$(CC) $^ -o $(BINPATH)/$@ $(LIBS) $(CFLAGS)
 
 dir:
 	mkdir -p ./obj
