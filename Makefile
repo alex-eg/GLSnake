@@ -12,20 +12,25 @@ MODULES = main ingame paused gui targa
 DEPS = $(INCPATH)/*.h
 OBJ = $(MODULES:%=$(OBJPATH)/%.o)
 
-all: snake
-	cp $(BINPATH)/$< ./
+all: $(BINPATH)/snake
+	cp $< ./
 
-$(OBJPATH)/%.o : $(SRCPATH)/%.c $(DEPS)
+$(OBJPATH)/%.o : $(SRCPATH)/%.c $(DEPS) | $(OBJPATH)
 	$(CC) -c -o $@ $< $(CFLAGS) 
 
-snake: $(OBJ)
-	$(CC) $^ -o $(BINPATH)/$@ $(LIBS) $(CFLAGS)
+$(BINPATH)/snake: $(OBJ) | $(BINPATH)
+	$(CC) $^ -o $@ $(LIBS) $(CFLAGS)
 
-dir:
-	mkdir -p ./obj
-	mkdir -p ./bin
+$(OBJPATH):	
+	mkdir -p $(OBJPATH)
+
+$(BINPATH):
+	mkdir -p $(BINPATH)
 
 clean:
 	rm -f *~ $(OBJPATH)/*.o $(BINPATH)/* $(SRCPATH)/*~ $(INCPATH)/*~
 
-.PHONY: clean
+count:
+	printf "%d\t lines of sources\n %d\t lines of headers\n" `cat $(SRCPATH)/*.c | wc -l` `cat $(DEPS) | wc -l`
+
+.PHONY: clean count dir
