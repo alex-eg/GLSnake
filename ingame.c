@@ -25,7 +25,7 @@ void SInGame_Init(SApp *App)
     /*!! TEXTURE TEST !!*/
     glEnable(GL_TEXTURE_2D);
     int res;
-    if (res = readTgaFromFile("./hana.tga", &App->InGame->textureFile)) printf("%s\n", getErrorDescription(res));
+    if ((res = readTgaFromFile("./hana.tga", &App->InGame->textureFile)))) printf("%s\n", getErrorDescription(res));
     glGenTextures(1, &App->InGame->texture);
     glBindTexture(GL_TEXTURE_2D, App->InGame->texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
