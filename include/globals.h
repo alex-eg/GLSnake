@@ -16,6 +16,8 @@ typedef struct {
     SDL_Surface *SDisplay;
     struct SInGame *InGame;
     struct SPaused *Paused;
+    struct SHighScore *HighScore;
+    struct SMainMenu *MainMenu;
 } SApp;
 
 
