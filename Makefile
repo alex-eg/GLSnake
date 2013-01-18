@@ -33,4 +33,4 @@ clean:
 count:
 	printf "%d\t lines of sources\n %d\t lines of headers\n" `cat $(SRCPATH)/*.c | wc -l` `cat $(DEPS) | wc -l`
 
-.PHONY: clean count dir
+.PHONY: clean count
