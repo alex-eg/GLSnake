@@ -1,38 +1,36 @@
-CC = cc
-CFLAGS = -g -pg -O2 -std=c99
+CC = clang
+CFLAGS = -g -O2 -std=c99 -Wall -I$(INCPATH)
 LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf
 
 OBJPATH = ./obj
 BINPATH = ./bin
+SRCPATH = ./src
+INCPATH = ./include
 
-_OBJ = main.o ingame.o paused.o gui.o targa.o
-OBJ = $(patsubst %,$(OBJPATH)/%,$(_OBJ))
+MODULES = main ingame paused gui targa
+
+DEPS = $(INCPATH)/*.h
+OBJ = $(MODULES:%=$(OBJPATH)/%.o)
+
+all: $(BINPATH)/snake
+	cp $< ./
+
+$(OBJPATH)/%.o : $(SRCPATH)/%.c $(DEPS) | $(OBJPATH)
+	$(CC) -c -o $@ $< $(CFLAGS) 
+
+$(BINPATH)/snake: $(OBJ) | $(BINPATH)
+	$(CC) $^ -o $@ $(LIBS) $(CFLAGS)
+
+$(OBJPATH):	
+	mkdir -p $(OBJPATH)
+
+$(BINPATH):
+	mkdir -p $(BINPATH)
 
 clean:
-	rm -f ./*~ ./$(OBJPATH)/*.o ./$(BINPATH)/*
+	rm -f *~ $(OBJPATH)/*.o $(BINPATH)/* $(SRCPATH)/*~ $(INCPATH)/*~
 
-all: targa gui dir ingame paused main app
+count:
+	printf "%d\t lines of sources\n %d\t lines of headers\n" `cat $(SRCPATH)/*.c | wc -l` `cat $(DEPS) | wc -l`
 
-dir:
-	mkdir -p ./obj
-	mkdir -p ./bin
-
-gui: gui.c
-	$(CC) -c -o $(OBJPATH)/gui.o gui.c $(LIBS) $(CFLAGS)
-
-targa: targa.c
-	$(CC) -c -o $(OBJPATH)/$@.o $@.c $(LIBS) $(CFLAGS) -DTGA_COMPILE
-
-paused: paused.c
-	$(CC) -c -o $(OBJPATH)/paused.o paused.c $(LIBS) $(CFLAGS)
-
-ingame:
-	$(CC) -c -o $(OBJPATH)/$@.o $@.c $(LIBS) $(CFLAGS)
-
-main:
-	$(CC) -c -o $(OBJPATH)/main.o main.c $(LIBS) $(CFLAGS)
-
-app:
-	$(CC) -o $(BINPATH)/snake $(OBJ) $(LIBS) $(CFLAGS)
-
-.PHONY: clean
+.PHONY: clean count

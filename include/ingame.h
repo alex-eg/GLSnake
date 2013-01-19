@@ -6,7 +6,7 @@
 
 /*-----------------------------------------------*/
 struct SPoint {
-    int x,y;
+    int x, y;
     struct SPoint *next;
 };
 typedef struct SPoint SPoint;

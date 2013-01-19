@@ -9,11 +9,11 @@ int readTgaFromFile(char *filename, STGAFile *file)
 {
     FILE *in;
     int res;
-    if (res = isNotNewTga(filename)) return E_NOT_A_TGA;
+    if ((res = isNotNewTga(filename))) return E_NOT_A_TGA;
     if (!(in = fopen(filename, "rb"))) return E_INVALID_FILE;
-    if (res = readFooter(&file->footer, in)) return res;
-    if (res = readHeader(&file->header, in)) return res;
-    if (res = readImage(file, in)) return res;
+    if ((res = readFooter(&file->footer, in))) return res;
+    if ((res = readHeader(&file->header, in))) return res;
+    if ((res = readImage(file, in))) return res;
 
     return E_SUCCESS;
 }
@@ -62,6 +62,9 @@ static int readImage(STGAFile *file, FILE *from)
     return E_SUCCESS;
 }
 
+/* Compile with -DTGA_TEST into executable to perform tests */
+#ifdef TGA_TEST
+
 static TGAASCII const * printBits(TGAbyte num)
 {
     static TGAASCII res[11];
@@ -69,10 +72,10 @@ static TGAASCII const * printBits(TGAbyte num)
     res[0] = '\0';
     for (int i = 0; i < 10; i++) {
 	if (i == 2 || i == 4) {
-	    strcat(res, " ");
+	    strcat((char *)res, " ");
 	    continue;
 	}
-	strcat(res, ((num & stride) == stride) ? "1" : "0");
+	strcat((char *)res, ((num & stride) == stride) ? "1" : "0");
 	stride >>= 1;
     }
     return res;
@@ -110,8 +113,6 @@ static void printHeader(STGAHeader *header)
     printf("5.6 Image Descriptor:\t\t%s\n", printBits(header->imageDescriptor));
 }
 
-/* Compile with -DTGA_TEST into executable to perform tests */
-#ifdef TGA_TEST
 int main(int argc, char **argv)
 {
     int result;

@@ -1,8 +1,3 @@
-/*--- HINT! Compile with "gcc -o snake main.c -lSDL -lGL" ---
-      Disregard that ^, use the allmighty GNUMake!
-
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -47,10 +42,14 @@ int SInit(SApp *App)
     int SdlRet = SInitSdl(App);
     App->InGame = NULL;
     App->Paused = NULL;
+    App->HighScore = NULL;
+    App->MainMenu = NULL;
+
     App->State = malloc(sizeof(vtable_State));
 
     SInGame_Create(App);
     SPaused_Create(App);
+
     SInGame_Switch(App);
 
     App->State->Init(App);

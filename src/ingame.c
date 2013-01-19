@@ -19,13 +19,14 @@ void SInGame_Init(SApp *App)
 
     App->InGame->Timer = 0;
     App->InGame->Speed = 1;
+
     SInGame_InitGraphics();
     SInGame_InitSound(App);
 
     /*!! TEXTURE TEST !!*/
     glEnable(GL_TEXTURE_2D);
     int res;
-    if (res = readTgaFromFile("./hana.tga", &App->InGame->textureFile)) printf("%s\n", getErrorDescription(res));
+    if ((res = readTgaFromFile("./hana.tga", &App->InGame->textureFile))) printf("%s\n", getErrorDescription(res));
     glGenTextures(1, &App->InGame->texture);
     glBindTexture(GL_TEXTURE_2D, App->InGame->texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -96,17 +97,17 @@ void SInGame_Render(SApp *App)
     if (App->InGame->Head->next != NULL) {
         SPoint *curr = App->InGame->Head->next;
         do {
-	  //            glColor3f(0.0, 0.3, 0.8);
-            glColor3f(1.0, 1.0, 1.0);
-            SInGame_Cube(App, curr->x,curr->y, CUBESIZE);
-            curr = curr->next;
+	  //glColor3f(0.0, 0.3, 0.8);
+	  glColor3f(1.0, 1.0, 1.0);
+	  SInGame_Cube(App, curr->x,curr->y, CUBESIZE);
+	  curr = curr->next;
         } while (curr != NULL);
     }
+    // glColor3f(0.7, 0.3, 0.1);
     glColor3f(1.0, 1.0, 1.0);
-    //    glColor3f(0.7, 0.3, 0.1);
-    SInGame_Cube(App, App->InGame->Food.x,App->InGame->Food.y, CUBESIZE+1); 
-    glColor3f(1.0, 1.0, 1.0);  
-    //    glColor3f(0.1, 0.5, 0.5);
+    SInGame_Cube(App, App->InGame->Food.x,App->InGame->Food.y, CUBESIZE+1);
+    glColor3f(1.0, 1.0, 1.0);
+    // glColor3f(0.1, 0.5, 0.5);
     SInGame_Cube(App, App->InGame->Head->x,App->InGame->Head->y, CUBESIZE+2);
     SInGame_Grid();
     SDL_GL_SwapBuffers();
@@ -126,13 +127,9 @@ void SInGame_Cube(SApp *App, int x, int y, int size)
         
     /* BOTTOM */
     glNormal3d(0,0,-1);
-    //    glTexCoord2f (0.0, 0.0);
     glVertex3d(        0,         0, 0); 
-    //    glTexCoord2f (0.0, 1.0);
     glVertex3d(     size,         0, 0);
-    //    glTexCoord2f (1.0, 1.0);
     glVertex3d(     size,      size, 0);
-    //    glTexCoord2f (1.0, 0.0);
     glVertex3d(        0,      size, 0);
 
     /* REAR */
@@ -188,7 +185,7 @@ void SInGame_Grid(void)
 {
     int i=0;
     glColor3f(0.3, 0.0 ,0.0);
-    for (; i<=MATRIXSIZE; i++) {
+    for (; i <= MATRIXSIZE; i++) {
         glBegin(GL_LINES);
         glVertex2f(CELLSIZE*i,0);
         glVertex2f(CELLSIZE*i,CELLSIZE*MATRIXSIZE);
