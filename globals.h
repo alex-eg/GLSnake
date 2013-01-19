@@ -5,9 +5,9 @@
 #include <GL/gl.h>
 #include <SDL/SDL_mixer.h>
 
-#define CUBESIZE 30
-#define CELLSIZE 36
-#define MATRIXSIZE 20
+#define CUBESIZE 100
+#define CELLSIZE 106
+#define MATRIXSIZE 5
 
 typedef struct {
     int Running;
