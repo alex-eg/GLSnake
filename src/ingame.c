@@ -26,7 +26,7 @@ void SInGame_Init(SApp *App)
     /*!! TEXTURE TEST !!*/
     glEnable(GL_TEXTURE_2D);
     int res;
-    if ((res = readTgaFromFile("./hana.tga", &App->InGame->textureFile))) printf("%s\n", getErrorDescription(res));
+    if ((res = STGA_ReadFromFile(&App->InGame->textureFile, "./hana.tga"))) printf("%s\n", STGA_GetErrorDescription(res));
     glGenTextures(1, &App->InGame->texture);
     glBindTexture(GL_TEXTURE_2D, App->InGame->texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -178,7 +178,7 @@ void SInGame_Cube(SApp *App, int x, int y, int size)
     glEnd();
     glPopMatrix();
 
-        glFinish();
+    glFinish();
 }
 
 void SInGame_Grid(void)

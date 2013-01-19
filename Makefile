@@ -7,7 +7,7 @@ BINPATH = ./bin
 SRCPATH = ./src
 INCPATH = ./include
 
-MODULES = main ingame paused gui targa
+MODULES = main ingame paused gui targa mainmenu
 
 DEPS = $(INCPATH)/*.h
 OBJ = $(MODULES:%=$(OBJPATH)/%.o)

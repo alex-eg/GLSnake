@@ -1,15 +1,16 @@
 #define TGA_COMPILE /* To tell targa.h that it's included from targa.c */
 #include "targa.h"
 
-char * getErrorDescription(int errorCode)
+char * STGA_GetErrorDescription(int errorCode)
 {
     return STGAErrorDescription[errorCode].errorMessage;
 }
 
-int readTgaFromFile(char *filename, STGAFile *file)
+int STGA_ReadFromFile(STGAFile *file, char *filename)
 {
     FILE *in;
     int res;
+    file->image.imageData = NULL;
     if ((res = isNotNewTga(filename))) return E_NOT_A_TGA;
     if (!(in = fopen(filename, "rb"))) return E_INVALID_FILE;
     if ((res = readFooter(&file->footer, in))) return res;
@@ -17,6 +18,12 @@ int readTgaFromFile(char *filename, STGAFile *file)
     if ((res = readImage(file, in))) return res;
 
     return E_SUCCESS;
+}
+
+int STGA_Delete(STGAFile *file)
+{
+    if (file->image.imageData != NULL) free(file->image.imageData);
+    return 0;
 }
 
 static int isNotNewTga(char *filename)
@@ -122,7 +129,7 @@ int main(int argc, char **argv)
 	return 0;
     }
     if (result = isNotNewTga(argv[1])) {
-	printf("Failed to recognize file, error: %s\n", getErrorDescription(result));
+	printf("Failed to recognize file, error: %s\n", STGA_GetErrorDescription(result));
 	return 0;
     }
 

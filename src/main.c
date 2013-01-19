@@ -4,6 +4,7 @@
 
 #include "ingame.h"
 #include "paused.h"
+#include "mainmenu.h"
 
 int SInit(SApp *);
 void SCleanup(SApp *);
@@ -49,8 +50,10 @@ int SInit(SApp *App)
 
     SInGame_Create(App);
     SPaused_Create(App);
+    SMainMenu_Create(App);
 
-    SInGame_Switch(App);
+    //    SInGame_Switch(App);
+    SMainMenu_Switch(App);
 
     App->State->Init(App);
     App->Running = 1;
@@ -85,7 +88,7 @@ int SInitSdl(SApp *App)
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  0);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  0);
 
-    if ((App->SDisplay = SDL_SetVideoMode(CELLSIZE*MATRIXSIZE, CELLSIZE*MATRIXSIZE, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL)) == NULL) return 2;
+    if ((App->SDisplay = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL)) == NULL) return 2;
     
     return 0;
 }

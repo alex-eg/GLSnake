@@ -11,14 +11,6 @@ struct SPoint {
 };
 typedef struct SPoint SPoint;
 
-
-/*-----------------------------------------------*/
-typedef struct {
-    Mix_Chunk *Snd;
-    int Chnl;
-} Sound;
-
-
 /*-----------------------------------------------*/
 struct SInGame {
 

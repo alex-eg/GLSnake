@@ -120,8 +120,9 @@ static struct _STGAErrorDescription {
 
 /*---== TGA Functions ==---*/
 
-int readTgaFromFile(char *filename, STGAFile *);
-char * getErrorDescription(int);
+int STGA_ReadFromFile(STGAFile *, char *filename);
+int STGA_Delete(STGAFile *);
+char * STGA_GetErrorDescription(int);
 
 #ifdef TGA_COMPILE
 static int isNotNewTga(char *filename); /* determine if given file is usable TGA file */

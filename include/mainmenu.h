@@ -20,6 +20,7 @@ typedef struct SMainMenu SMainMenu;
 /*--- INITIALIZATION ---*/
 /* public         */ void SMainMenu_Init(SApp *);
 /* static private */ void SMainMenu_InitGraphics(void);
+/* static private */ void SMainMenu_InitGUI(SApp *);
 
 /*--- LOGICS ---*/
 /* public         */ void SMainMenu_Loop(SApp *);
@@ -27,7 +28,6 @@ typedef struct SMainMenu SMainMenu;
 /*--- EVENT PROCESSING --- */
 /* private        */ void SMainMenu_OnKeyDown(SApp *, SDLKey, SDLMod, Uint16);
 /* public         */ void SMainMenu_ProcessEvent(SApp *, SDL_Event *);
-/* private        */ void SMainMenu_ProcessNewState(SApp *);
 
 /*--- GRAPHICS ---*/
 /* public         */ void SMainMenu_Render(SApp *);
