@@ -5,9 +5,11 @@ void SMainMenu_Render(SApp *App)
     SMainMenu *self = App->MainMenu;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    SLabel_Render(self->Logo);
     SLabel_Render(self->MainFrame);
-    /* SLabel_Render(self->Logo);
-   
+
+
+       /*   
     SButton_Render(self->Start);
     SButton_Render(self->HighScores);
     SButton_Render(self->Exit);*/
@@ -32,22 +34,26 @@ void SMainMenu_InitGraphics(void)
 
     glMatrixMode(GL_PROJECTION);
     glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
-    //glFrustum(-305, 305, 305, -305, 655, 805);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //    glTranslatef(0, 0, -20.0f);
 }
 
 void SMainMenu_InitGUI(SApp *App)
 {
-    SMainMenu *self = App->MainMenu;
-    self->MainFrame = SLabel_Create();
-    SLabel_Set(self->MainFrame, 0, 0, WIDTH, HEIGHT);
     #ifndef RESOURCE_DIR 
     #define RESOURCE_DIR "./"
     #endif
+
+    SMainMenu *self = App->MainMenu;
+
+    self->MainFrame = SLabel_Create();
+    SLabel_Set(self->MainFrame, 0, 0, WIDTH, HEIGHT);
     SLabel_SetTexture(self->MainFrame, RESOURCE_DIR "/textures/background.tga");
+
+    self->Logo = SLabel_Create();
+    SLabel_Set(self->Logo, (WIDTH - 400) / 2 - 10, 100, 400, 380);
+    SLabel_SetTexture(self->Logo, RESOURCE_DIR "/textures/logo.tga");
 }
 
 void SMainMenu_InitSound(SApp *App)
