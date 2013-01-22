@@ -11,16 +11,23 @@
 #define WIDTH 600
 #define HEIGHT 600
 
-typedef struct {
+struct SApp {
     int Running;
 
-    struct vtable_State *State;
+    struct StateMethods {
+	void (* Init)(struct SApp *);
+	void (* Loop)(struct SApp *);
+	void (* Event)(struct SApp *, SDL_Event *);
+	void (* Render)(struct SApp *);
+	void (* Cleanup)(struct SApp *);
+    } State;
     SDL_Surface *SDisplay;
     struct SInGame *InGame;
     struct SPaused *Paused;
     struct SHighScore *HighScore;
     struct SMainMenu *MainMenu;
-} SApp;
+};
+typedef struct SApp SApp;
 
 /*-----------------------------------------------*/
 typedef struct {
@@ -28,13 +35,4 @@ typedef struct {
     int Chnl;
 } Sound;
 
-/*-----------------------------------------------*/
-struct vtable_State{
-    void (* Init)(SApp *);
-    void (* Loop)(SApp *);
-    void (* Event)(SApp *, SDL_Event *);
-    void (* Render)(SApp *);
-    void (* Cleanup)(SApp *);
-};
-typedef struct vtable_State vtable_State;
 #endif

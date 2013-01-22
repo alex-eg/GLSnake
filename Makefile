@@ -1,15 +1,16 @@
 CC = clang
-CFLAGS = -g -O2 -std=c99 -Wall -I$(INCPATH)
+CFLAGS = -g -std=c99 -Wall -I$(INCPATH) -DRESOURCE_DIR=\"$(RESPATH)\"
 LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf
 
 OBJPATH = ./obj
 BINPATH = ./bin
 SRCPATH = ./src
 INCPATH = ./include
+RESPATH = ./resources
 
 MODULES = main ingame paused gui targa mainmenu
 
-DEPS = $(INCPATH)/*.h
+DEPS = $(INCPATH)/*.h Makefile
 OBJ = $(MODULES:%=$(OBJPATH)/%.o)
 
 all: $(BINPATH)/snake

@@ -116,11 +116,11 @@ void SPaused_Create(SApp *App)
 
 void SPaused_Switch(SApp *App)
 {
-    App->State->Init = &SPaused_Init;
-    App->State->Loop = &SPaused_Loop;
-    App->State->Event = &SPaused_ProcessEvent;
-    App->State->Render = &SPaused_Render;
-    App->State->Cleanup = &SPaused_Delete;
+    App->State.Init = &SPaused_Init;
+    App->State.Loop = &SPaused_Loop;
+    App->State.Event = &SPaused_ProcessEvent;
+    App->State.Render = &SPaused_Render;
+    App->State.Cleanup = &SPaused_Delete;
 }
 
 /*--- Fonts! ---*/

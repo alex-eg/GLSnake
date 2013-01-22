@@ -26,10 +26,10 @@ int main(int argc, char** argv)
     printf("Entering loop...\n");
     while (Snake.Running) {
         while (SDL_PollEvent(&Event)) {
-            Snake.State->Event(&Snake, &Event);
+            Snake.State.Event(&Snake, &Event);
         }
-        Snake.State->Loop(&Snake);
-        Snake.State->Render(&Snake);
+        Snake.State.Loop(&Snake);
+        Snake.State.Render(&Snake);
         SDL_Delay(50);
     }
     printf("Cleaning up... ");
@@ -46,16 +46,14 @@ int SInit(SApp *App)
     App->HighScore = NULL;
     App->MainMenu = NULL;
 
-    App->State = malloc(sizeof(vtable_State));
-
     SInGame_Create(App);
     SPaused_Create(App);
     SMainMenu_Create(App);
 
-    //    SInGame_Switch(App);
+    //SInGame_Switch(App);
     SMainMenu_Switch(App);
 
-    App->State->Init(App);
+    App->State.Init(App);
     App->Running = 1;
     return SdlRet;
 }
@@ -64,7 +62,7 @@ void SCleanup(SApp *App)
 {
     SDL_FreeSurface(App->SDisplay);
     Mix_CloseAudio();
-    App->State->Cleanup(App);
+    App->State.Cleanup(App);
     SDL_Quit();
 }
 
@@ -89,6 +87,6 @@ int SInitSdl(SApp *App)
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  0);
 
     if ((App->SDisplay = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL)) == NULL) return 2;
-    
+    glViewport(0, 0, WIDTH, HEIGHT);
     return 0;
 }

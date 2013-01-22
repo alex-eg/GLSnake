@@ -1,5 +1,8 @@
 #include "ingame.h"
 #include "paused.h"
+#include "gui.h"
+
+STexture te;
 
 void SInGame_Init(SApp *App)
 {
@@ -23,19 +26,22 @@ void SInGame_Init(SApp *App)
     SInGame_InitGraphics();
     SInGame_InitSound(App);
 
-    /*!! TEXTURE TEST !!*/
+  /*!! TEXTURE TEST !!*/
     glEnable(GL_TEXTURE_2D);
-    int res;
+    /*    int res;
     if ((res = STGA_ReadFromFile(&App->InGame->textureFile, "./hana.tga"))) printf("%s\n", STGA_GetErrorDescription(res));
     glGenTextures(1, &App->InGame->texture);
+
     glBindTexture(GL_TEXTURE_2D, App->InGame->texture);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexImage2D (GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_BGR, GL_UNSIGNED_BYTE, App->InGame->textureFile.image.imageData);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_BGR, GL_UNSIGNED_BYTE, App->InGame->textureFile.image.imageData);*/
+    STexture_Load(&te, "./hana.tga");
 }
 
 void SInGame_InitGraphics(void)
@@ -122,7 +128,8 @@ void SInGame_Cube(SApp *App, int x, int y, int size)
     glPushMatrix();
     glTranslatef(xc, yc, 0);
 
-    glBindTexture (GL_TEXTURE_2D, App->InGame->texture);
+    //    glBindTexture (GL_TEXTURE_2D, App->InGame->texture);
+    glBindTexture (GL_TEXTURE_2D, te.texID);
     glBegin(GL_QUADS);
         
     /* BOTTOM */
@@ -277,7 +284,7 @@ void SInGame_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
     }
     case SDLK_ESCAPE: { //ESC
 	SPaused_Switch(App);
-	App->State->Init(App);
+	App->State.Init(App);
 	break;
     }
     case SDLK_UP: { //UP Arrow
@@ -359,9 +366,9 @@ void SInGame_Create(SApp *App)
 
 void SInGame_Switch(SApp *App)
 {
-    App->State->Init = &SInGame_Init;
-    App->State->Loop = &SInGame_Loop;
-    App->State->Event = &SInGame_ProcessEvent;
-    App->State->Render = &SInGame_Render;
-    App->State->Cleanup = &SInGame_Delete;
+    App->State.Init = &SInGame_Init;
+    App->State.Loop = &SInGame_Loop;
+    App->State.Event = &SInGame_ProcessEvent;
+    App->State.Render = &SInGame_Render;
+    App->State.Cleanup = &SInGame_Delete;
 }

@@ -3,6 +3,7 @@
 void SMainMenu_Render(SApp *App)
 {
     SMainMenu *self = App->MainMenu;
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     SLabel_Render(self->MainFrame);
     /* SLabel_Render(self->Logo);
@@ -10,38 +11,43 @@ void SMainMenu_Render(SApp *App)
     SButton_Render(self->Start);
     SButton_Render(self->HighScores);
     SButton_Render(self->Exit);*/
+    SDL_GL_SwapBuffers();
 }
 
 void SMainMenu_Init(SApp *App)
 {
-    SMainMenu *self = App->MainMenu;
-
     SMainMenu_InitGraphics();
-    SMainMenu_InitGUI(App);
     SMainMenu_InitSound(App);
+    SMainMenu_InitGUI(App);
 }
 
 void SMainMenu_InitGraphics(void)
 {
     glClearColor (0.0, 0.0, 0.0, 0.0);
-  
-    glShadeModel(GL_SMOOTH);
+    glShadeModel (GL_SMOOTH);
 
     glEnable(GL_DEPTH_TEST);
+
     glEnable(GL_TEXTURE_2D);
 
     glMatrixMode(GL_PROJECTION);
-    glOrtho(0, CELLSIZE * MATRIXSIZE, 0, CELLSIZE * MATRIXSIZE, -1, 1);
+    glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
+    //glFrustum(-305, 305, 305, -305, 655, 805);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    //    glTranslatef(0, 0, -20.0f);
 }
 
 void SMainMenu_InitGUI(SApp *App)
 {
     SMainMenu *self = App->MainMenu;
-    SLabel_Create(self->MainFrame, 0, 0, WIDTH, HEIGHT);
-    SLabel_SetTexture(self->MainFrame, "./background.tga");
+    self->MainFrame = SLabel_Create();
+    SLabel_Set(self->MainFrame, 0, 0, WIDTH, HEIGHT);
+    #ifndef RESOURCE_DIR 
+    #define RESOURCE_DIR "./"
+    #endif
+    SLabel_SetTexture(self->MainFrame, RESOURCE_DIR "/textures/background.tga");
 }
 
 void SMainMenu_InitSound(SApp *App)
@@ -93,9 +99,9 @@ void SMainMenu_Create(SApp *App)
 
 void SMainMenu_Switch(SApp *App)
 {
-    App->State->Init = &SMainMenu_Init;
-    App->State->Loop = &SMainMenu_Loop;
-    App->State->Event = &SMainMenu_ProcessEvent;
-    App->State->Render = &SMainMenu_Render;
-    App->State->Cleanup = &SMainMenu_Delete;
+    App->State.Init = &SMainMenu_Init;
+    App->State.Loop = &SMainMenu_Loop;
+    App->State.Event = &SMainMenu_ProcessEvent;
+    App->State.Render = &SMainMenu_Render;
+    App->State.Cleanup = &SMainMenu_Delete;
 }

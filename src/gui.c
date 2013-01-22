@@ -7,40 +7,53 @@
 int STexture_Load(STexture *self, char *filename)
 {
     STGAFile textureFile;
-    if (STGA_ReadFromFile(&textureFile, filename) != E_SUCCESS) exit(12);
-    
-    self->data = textureFile.image.imageData;
-    self->width = textureFile.header.width;
-    self->height = textureFile.header.height;
+    int res;
+    if ((res = STGA_ReadFromFile(&textureFile, filename))) printf("%s\n", STGA_GetErrorDescription(res));
+
+    if (textureFile.header.width != textureFile.header.height) {
+	printf("Texture dimensions don't match!\n");
+	exit(1);
+    }
+    self->size = textureFile.header.width;
     self->bitsPerPixel = textureFile.header.pixelDepth;
 
     glGenTextures(1, &self->texID);
+    self->texID = 1;
+    glBindTexture(GL_TEXTURE_2D, self->texID);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexImage2D (GL_TEXTURE_2D,
-		  0,
-		  GL_RGB,
-		  self->width,
-		  self->height,
-		  0,
-		  GL_BGR,
-		  GL_UNSIGNED_BYTE,
-		  self->data);
+    glTexImage2D(GL_TEXTURE_2D,
+		 0,
+		 GL_RGB,
+		 self->size,
+		 self->size,
+		 0,
+		 GL_BGR,
+		 GL_UNSIGNED_BYTE,
+		 textureFile.image.imageData);
+    STGA_Delete(&textureFile);
     return 0;
 }
 
 void STexture_Unload(STexture *self)
 {
-    free(self->data);
     glDeleteTextures(1, &self->texID);
 }
 
-void SLabel_Create(SLabel *self, int x, int y, int w, int h)
+SLabel * SLabel_Create(void)
 {
-    self = malloc(sizeof(SLabel));
+    SLabel *self = malloc(sizeof(SLabel));
+    SLabel_Set(self, 0, 0, 10, 10);
+    return self;
+}
+
+void SLabel_Set(SLabel *self, int x, int y, int w, int h)
+{
     self->x = x;
     self->y = y;
     self->width = w;
@@ -49,13 +62,14 @@ void SLabel_Create(SLabel *self, int x, int y, int w, int h)
 
 void SLabel_SetTexture(SLabel *self, char *filename)
 {
-    STexture_Load(self->texture, filename);
+    STexture_Load(&self->texture, filename);
 }
 
 void SLabel_Render(SLabel *self)
 {
-    glBindTexture(GL_TEXTURE_2D, self->texture->texID);
+    glBindTexture(GL_TEXTURE_2D, self->texture.texID);
 
+    glColor3f(1.0, 1.0, 1.0);
     glBegin(GL_QUADS);
 
     glTexCoord2f(0.0,     0.0);
@@ -72,5 +86,5 @@ void SLabel_Render(SLabel *self)
 
 void SLabel_Delete(SLabel *self)
 {
-    STexture_Unload(self->texture);
+    STexture_Unload(&self->texture);
 }
