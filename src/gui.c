@@ -97,6 +97,7 @@ SButton * SButton_Create(void)
 {
     SButton *self = malloc(sizeof(SButton));
     SButton_Set(self, 0, 0, 10, 10);
+    SButton_SetCallback(self, SButton_DefaultCallback);
     return self;
 }
 
@@ -163,4 +164,19 @@ void SButton_Link(SButton *prev, SButton *next)
 {
     prev->next = next;
     next->prev = prev;
+}
+
+void SButton_SetCallback(SButton *self, void (*p)(SApp *))
+{
+    self->callback = p;
+}
+
+void SButton_Call(SButton *self, SApp *App)
+{
+    self->callback(App);
+}
+
+void SButton_DefaultCallback(SApp *App)
+{
+    printf("Hello, I'm default callback function\n");
 }

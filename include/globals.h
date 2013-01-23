@@ -11,6 +11,10 @@
 #define WIDTH 600
 #define HEIGHT 600
 
+#ifndef RESOURCE_DIR 
+#define RESOURCE_DIR "./"
+#endif
+
 struct SApp {
     int Running;
 

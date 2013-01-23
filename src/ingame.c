@@ -25,27 +25,12 @@ void SInGame_Init(SApp *App)
 
     SInGame_InitGraphics();
     SInGame_InitSound(App);
-
-  /*!! TEXTURE TEST !!*/
-    glEnable(GL_TEXTURE_2D);
-    /*    int res;
-    if ((res = STGA_ReadFromFile(&App->InGame->textureFile, "./hana.tga"))) printf("%s\n", STGA_GetErrorDescription(res));
-    glGenTextures(1, &App->InGame->texture);
-
-    glBindTexture(GL_TEXTURE_2D, App->InGame->texture);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_BGR, GL_UNSIGNED_BYTE, App->InGame->textureFile.image.imageData);*/
-    STexture_Load(&te, "./hana.tga");
 }
 
 void SInGame_InitGraphics(void)
 {
+    glDisable(GL_TEXTURE_2D);
+
     GLfloat light_position[] = { 0.0, 0.0, 3.0, 0.0 };
     GLfloat amb[]  = { 0.0, 0.3, 0.3, 0.7 };
 
@@ -62,6 +47,7 @@ void SInGame_InitGraphics(void)
     glEnable(GL_COLOR_MATERIAL);
     
     glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
     glFrustum(-305, 305, 305, -305, 655, 805);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -83,10 +69,10 @@ void SInGame_InitSound(SApp *App)
     }
 
     
-    App->InGame->Music = Mix_LoadMUS("./sound/this.ogg");
+    App->InGame->Music = Mix_LoadMUS(RESOURCE_DIR "sound/this.ogg");
     /*    Mix_PlayMusic(App->InGame->Music, -1);*/
      
-    App->InGame->Nyam.Snd = Mix_LoadWAV("./sound/nom.ogg");
+    App->InGame->Nyam.Snd = Mix_LoadWAV(RESOURCE_DIR "sound/nom.ogg");
     App->InGame->Nyam.Chnl = -1;
 }
 
@@ -103,17 +89,14 @@ void SInGame_Render(SApp *App)
     if (App->InGame->Head->next != NULL) {
         SPoint *curr = App->InGame->Head->next;
         do {
-	  //glColor3f(0.0, 0.3, 0.8);
-	  glColor3f(1.0, 1.0, 1.0);
+	  glColor3f(0.0, 0.3, 0.8);
 	  SInGame_Cube(App, curr->x,curr->y, CUBESIZE);
 	  curr = curr->next;
         } while (curr != NULL);
     }
-    // glColor3f(0.7, 0.3, 0.1);
-    glColor3f(1.0, 1.0, 1.0);
+    glColor3f(0.7, 0.3, 0.1);
     SInGame_Cube(App, App->InGame->Food.x,App->InGame->Food.y, CUBESIZE+1);
-    glColor3f(1.0, 1.0, 1.0);
-    // glColor3f(0.1, 0.5, 0.5);
+    glColor3f(0.1, 0.5, 0.5);
     SInGame_Cube(App, App->InGame->Head->x,App->InGame->Head->y, CUBESIZE+2);
     SInGame_Grid();
     SDL_GL_SwapBuffers();
@@ -128,8 +111,6 @@ void SInGame_Cube(SApp *App, int x, int y, int size)
     glPushMatrix();
     glTranslatef(xc, yc, 0);
 
-    //    glBindTexture (GL_TEXTURE_2D, App->InGame->texture);
-    glBindTexture (GL_TEXTURE_2D, te.texID);
     glBegin(GL_QUADS);
         
     /* BOTTOM */
@@ -169,17 +150,9 @@ void SInGame_Cube(SApp *App, int x, int y, int size)
 
     /* TOP */
     glNormal3d(0,0,1);
-
-    glTexCoord2f (0.0, 0.0);
     glVertex3d(       0,        0,     size);
-
-    glTexCoord2f (0.0, 1.0);
     glVertex3d(       0,     size,     size);
-
-    glTexCoord2f (1.0, 1.0);
     glVertex3d(    size,     size,     size);
-
-    glTexCoord2f (1.0, 0.0);
     glVertex3d(    size,        0,     size);
 
     glEnd();

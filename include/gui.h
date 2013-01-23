@@ -27,6 +27,7 @@ struct SButton {
     STexture texture;
     int selected;
     struct SButton *next, *prev;
+    void (*callback)(SApp *);
 };
 typedef struct SButton SButton;
     
@@ -42,6 +43,9 @@ void SButton_SetTexture(SButton *self, char *filename);
 void SButton_Render(SButton *self);
 int SButton_Swap(SButton *self); /* Swaps state and returns new value */
 /*static */ void SButton_Link(SButton *prev, SButton *next);
+void SButton_SetCallback(SButton *self, void (*pointer)(SApp *));
+void SButton_Call(SButton *self, SApp *);
+void SButton_DefaultCallback(SApp *);
 
 SLabel * SLabel_Create(void);
 void SLabel_Set(SLabel *self, int x, int y, int w, int h);

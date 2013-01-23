@@ -34,6 +34,10 @@ typedef struct SMainMenu SMainMenu;
 /* public         */ void SMainMenu_Render(SApp *);
 
 /*--- OpenGL Drawing ---*/
+/*--- Callbacks ---*/
+void SMainMenu_StartGame(SApp *App);
+void SMainMenu_ExitApp(SApp *App);
+void SMainMenu_ShowHighScores(SApp *App);
 
 /*--- Sound and music ---*/
 /* private         */ void SMainMenu_InitSound(SApp *);

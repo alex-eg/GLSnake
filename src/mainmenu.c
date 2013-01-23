@@ -33,6 +33,7 @@ void SMainMenu_InitGraphics(void)
     glEnable(GL_COLOR_MATERIAL);
 
     glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
     glOrtho(0, WIDTH, HEIGHT, 0, -1, 1);
 
     glMatrixMode(GL_MODELVIEW);
@@ -41,10 +42,6 @@ void SMainMenu_InitGraphics(void)
 
 void SMainMenu_InitGUI(SApp *App)
 {
-    #ifndef RESOURCE_DIR 
-    #define RESOURCE_DIR "./"
-    #endif
-
     SMainMenu *self = App->MainMenu;
 
     self->MainFrame = SLabel_Create();
@@ -59,6 +56,7 @@ void SMainMenu_InitGUI(SApp *App)
     SButton_Set(self->Start, (WIDTH - 140) / 2, 380, 140, 30);
     SButton_SetTexture(self->Start, RESOURCE_DIR "/textures/start.tga");
     SButton_Swap(self->Start);
+    SButton_SetCallback(self->Start, SMainMenu_StartGame);
 
     self->HighScores = SButton_Create();
     SButton_Set(self->HighScores, (WIDTH - 140) / 2, 430, 140, 30);
@@ -67,6 +65,7 @@ void SMainMenu_InitGUI(SApp *App)
     self->Exit = SButton_Create();
     SButton_Set(self->Exit, (WIDTH - 140) / 2, 480, 140, 30);
     SButton_SetTexture(self->Exit, RESOURCE_DIR "/textures/exit.tga");
+    SButton_SetCallback(self->Exit, SMainMenu_ExitApp);
 
     SButton_Link(self->Start, self->HighScores);
     SButton_Link(self->HighScores, self->Exit);
@@ -116,6 +115,10 @@ void SMainMenu_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
 	SButton_Swap(self->selection);
 	break;
     }
+    case SDLK_RETURN: {
+	SButton_Call(self->selection, App);
+	break;
+    }
     default: break;
     }
 }
@@ -144,4 +147,21 @@ void SMainMenu_Switch(SApp *App)
     App->State.Event = &SMainMenu_ProcessEvent;
     App->State.Render = &SMainMenu_Render;
     App->State.Cleanup = &SMainMenu_Delete;
+}
+
+/*--=== Callbacks ===--*/
+void SMainMenu_StartGame(SApp *App) 
+{
+    SInGame_Switch(App);
+    App->State.Init(App);
+}
+
+void SMainMenu_ExitApp(SApp *App)
+{
+    App->Running = 0;
+}
+
+void SMainMenu_ShowHighScores(SApp *App)
+{
+
 }
