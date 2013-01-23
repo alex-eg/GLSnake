@@ -6,6 +6,7 @@
 
 struct SMainMenu {
     SApp *App;
+    SButton *selection;
 
     SLabel *MainFrame;
 

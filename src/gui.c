@@ -18,7 +18,6 @@ int STexture_Load(STexture *self, char *filename)
     self->bitsPerPixel = textureFile.header.pixelDepth;
 
     glGenTextures(1, &self->texID);
-    self->texID = 1;
     glBindTexture(GL_TEXTURE_2D, self->texID);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -42,8 +41,10 @@ int STexture_Load(STexture *self, char *filename)
 
 void STexture_Unload(STexture *self)
 {
-    glDeleteTextures(1, &self->texID);
+    if (glIsTexture(self->texID)) glDeleteTextures(1, &self->texID);
 }
+
+/* SLABEL */
 
 SLabel * SLabel_Create(void)
 {
@@ -87,4 +88,79 @@ void SLabel_Render(SLabel *self)
 void SLabel_Delete(SLabel *self)
 {
     STexture_Unload(&self->texture);
+    free(self);
+}
+
+/* SBUTTON */
+
+SButton * SButton_Create(void)
+{
+    SButton *self = malloc(sizeof(SButton));
+    SButton_Set(self, 0, 0, 10, 10);
+    return self;
+}
+
+void SButton_Delete(SButton *self)
+{
+    STexture_Unload(&self->texture);
+}
+
+void SButton_Set(SButton *self, int x, int y, int w, int h)
+{
+    self->x = x;
+    self->y = y;
+    self->width = w;
+    self->height = h;
+    self->next = NULL;
+    self->prev = NULL;
+    self->selected = 0;
+}
+
+void SButton_SetTexture(SButton *self, char *filename)
+{
+    STexture_Load(&self->texture, filename);
+}
+
+void SButton_Render(SButton *self)
+{
+    glBindTexture(GL_TEXTURE_2D, self->texture.texID);
+
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_QUADS);
+
+    glTexCoord2f(0.0,     0.0);
+    glVertex2f  (self->x, self->y);
+    glTexCoord2f(1.0,     0.0);
+    glVertex2f  (self->x + self->width, self->y);
+    glTexCoord2f(1.0,     1.0);
+    glVertex2f  (self->x + self->width, self->y + self->height);
+    glTexCoord2f(0.0,     1.0);
+    glVertex2f  (self->x, self->y + self->height);
+
+    glEnd();
+
+
+    if (!self->selected) return;
+    glDisable(GL_TEXTURE_2D);
+
+    glColor3f(1.0, 1.0, 1.0);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(self->x - 30, self->y);
+    glVertex2f(self->x - 2 , self->y + self->height / 2);
+    glVertex2f(self->x - 30, self->y + self->height);
+    glEnd();
+
+    glEnable(GL_TEXTURE_2D);
+}
+
+int SButton_Swap(SButton *self)
+{
+    self->selected ^= 1;
+    return self->selected;
+}
+
+void SButton_Link(SButton *prev, SButton *next)
+{
+    prev->next = next;
+    next->prev = prev;
 }

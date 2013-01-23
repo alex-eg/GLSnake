@@ -24,7 +24,7 @@ typedef struct SLabel SLabel;
 
 struct SButton {
     int x, y, width, height;
-    STexture *texture;
+    STexture texture;
     int selected;
     struct SButton *next, *prev;
 };
@@ -38,11 +38,16 @@ void STexture_Unload(STexture *);
 SButton * SButton_Create(void);
 void SButton_Set(SButton *self, int x, int y, int w, int h);
 void SButton_Delete(SButton *self);
+void SButton_SetTexture(SButton *self, char *filename);
+void SButton_Render(SButton *self);
+int SButton_Swap(SButton *self); /* Swaps state and returns new value */
+/*static */ void SButton_Link(SButton *prev, SButton *next);
 
 SLabel * SLabel_Create(void);
 void SLabel_Set(SLabel *self, int x, int y, int w, int h);
 void SLabel_Delete(SLabel *self);
 void SLabel_SetTexture(SLabel *self, char *filename);
 void SLabel_Render(SLabel *self);
+
 
 #endif /* ifndef _S_GUI */
