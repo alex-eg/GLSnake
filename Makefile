@@ -20,7 +20,7 @@ $(OBJPATH)/%.o : $(SRCPATH)/%.c $(DEPS) | $(OBJPATH)
 	$(CC) -c -o $@ $< $(CFLAGS) 
 
 $(BINPATH)/snake: $(OBJ) | $(BINPATH)
-	$(CC) $^ -o $@ $(LIBS) $(CFLAGS)
+	$(CC) $^ -o $@ $(LIBS)
 
 $(OBJPATH):	
 	mkdir -p $(OBJPATH)
