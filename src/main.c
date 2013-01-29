@@ -5,6 +5,7 @@
 #include "ingame.h"
 #include "paused.h"
 #include "mainmenu.h"
+#include "ttfonts.h"
 
 int SInit(SApp *);
 void SCleanup(SApp *);
@@ -41,6 +42,10 @@ int main(int argc, char** argv)
 int SInit(SApp *App)
 {
     int SdlRet = SInitSdl(App);
+
+    SFont_Create(App);
+    SFont_InitTTF(App->Font, RESOURCE_DIR "/fonts/aesymatt.ttf");
+
     App->InGame = NULL;
     App->Paused = NULL;
     App->HighScore = NULL;
@@ -50,7 +55,6 @@ int SInit(SApp *App)
     SPaused_Create(App);
     SMainMenu_Create(App);
 
-    //SInGame_Switch(App);
     SMainMenu_Switch(App);
 
     App->State.Init(App);
@@ -60,6 +64,7 @@ int SInit(SApp *App)
 
 void SCleanup(SApp *App)
 {
+    SFont_Delete(App);
     SDL_FreeSurface(App->SDisplay);
     Mix_CloseAudio();
     App->State.Cleanup(App);

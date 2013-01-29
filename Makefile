@@ -8,7 +8,7 @@ SRCPATH = ./src
 INCPATH = ./include
 RESPATH = ./resources
 
-MODULES = main ingame paused gui targa mainmenu
+MODULES = main ingame paused gui targa mainmenu ttfonts
 
 DEPS = $(INCPATH)/*.h Makefile
 OBJ = $(MODULES:%=$(OBJPATH)/%.o)

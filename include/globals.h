@@ -30,6 +30,7 @@ struct SApp {
     struct SPaused *Paused;
     struct SHighScore *HighScore;
     struct SMainMenu *MainMenu;
+    struct SFont *Font;
 };
 typedef struct SApp SApp;
 

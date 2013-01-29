@@ -1,9 +1,5 @@
 #include "gui.h"
 
-/* Textures are our gui decals
-
-*/
-
 int STexture_Load(STexture *self, char *filename)
 {
     STGAFile textureFile;
