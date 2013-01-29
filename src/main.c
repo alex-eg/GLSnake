@@ -93,5 +93,6 @@ int SInitSdl(SApp *App)
 
     if ((App->SDisplay = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL)) == NULL) return 2;
     glViewport(0, 0, WIDTH, HEIGHT);
+
     return 0;
 }

@@ -29,7 +29,9 @@ void SFont_InitTTF(SFont *self, char *filename)
 void SFont_glEnable2D()
 {
     int vPort[4];
-  
+
+    glDisable(GL_DEPTH_TEST);
+
     glGetIntegerv(GL_VIEWPORT, vPort);
   
     glMatrixMode(GL_PROJECTION);
@@ -48,6 +50,8 @@ void SFont_glDisable2D()
     glPopMatrix();   
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void SFont_RenderText(SFont *self, const char *text, SDL_Rect *location, SDL_Color *color, enum FontSize s)
@@ -57,17 +61,17 @@ void SFont_RenderText(SFont *self, const char *text, SDL_Rect *location, SDL_Col
     int w,h;
     GLuint texture;
 
-    if (s == size24) initial = TTF_RenderUTF8_Blended(self->font24, text, *color);
-    else if (s == size16) initial = TTF_RenderUTF8_Blended(self->font16, text, *color);
-    else initial = TTF_RenderUTF8_Blended(self->font48, text, *color);
+    if (s == size24) initial = TTF_RenderUTF8_Solid(self->font24, text, *color);
+    else if (s == size16) initial = TTF_RenderUTF8_Solid(self->font16, text, *color);
+    else initial = TTF_RenderUTF8_Solid(self->font48, text, *color);
 
     w = SFont_nextpoweroftwo(initial->w);
     h = SFont_nextpoweroftwo(initial->h);
 	
-    intermediary = SDL_CreateRGBSurface(0, w, h, 32, 
-					0x00ff0000, 
-					0x0000ff00, 
-					0x000000ff, 
+    intermediary = SDL_CreateRGBSurface(0, w, h, 32,
+					0x00ff0000,
+					0x0000ff00,
+					0x000000ff,
 					0xff000000);
     
     SDL_BlitSurface(initial, 0, intermediary, 0);

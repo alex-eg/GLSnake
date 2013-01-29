@@ -3,6 +3,7 @@
 
 #include "globals.h"
 #include "gui.h"
+#include "ingame.h"
 
 struct SMainMenu {
     SApp *App;

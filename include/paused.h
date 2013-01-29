@@ -3,11 +3,13 @@
 
 #include "globals.h"
 #include "ttfonts.h"
+#include "gui.h"
 
 struct SPaused {
     SApp *App;
     int Position;
-    SDL_Surface *snapshot;
+    GLubyte *snapshot;
+    GLuint texture;
 };
 typedef struct SPaused SPaused;
 

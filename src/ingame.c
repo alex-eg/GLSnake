@@ -235,7 +235,7 @@ void SInGame_ProcessEvent(SApp *App, SDL_Event *Event)
 {
     switch (Event->type) {
     case SDL_KEYDOWN : {
-        SInGame_OnKeyDown(App, Event->key.keysym.sym, Event->key.keysym.mod, Event->key.keysym.unicode);
+        SInGame_OnKeyDown(App, Event->key.keysym.sym);
         break;
     }
     case SDL_QUIT : {
@@ -247,7 +247,7 @@ void SInGame_ProcessEvent(SApp *App, SDL_Event *Event)
     }
 }
 
-void SInGame_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
+void SInGame_OnKeyDown(SApp *App, SDLKey sym)
 {
     switch (sym) {
     case SDLK_F1: { //F1

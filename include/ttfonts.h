@@ -15,6 +15,9 @@ struct SFont {
 typedef struct SFont SFont;
 
 /*--- Fonts! ---*/
+void SFont_Create(SApp *);
+void SFont_Delete(SApp *);
+
 void SFont_InitTTF (SFont *, char *filename);
 void SFont_glEnable2D (void);
 void SFont_glDisable2D (void);
