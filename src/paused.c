@@ -76,9 +76,12 @@ void SPaused_Render(SApp *App)
     position.x = WIDTH / 2 - 100;
     position.y = HEIGHT / 2;
 
+    glEnable(GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     SFont_glEnable2D();
 
-glBindTexture(GL_TEXTURE_2D, self->texture);
+    glBindTexture(GL_TEXTURE_2D, self->texture);
 
     glEnable(GL_TEXTURE_2D);
 
