@@ -82,7 +82,7 @@ void SPaused_Render(SApp *App)
 
     glEnable(GL_TEXTURE_2D);
 
-    glColor3f(1.5, 1.5, 1.5);
+    glColor3f(.5, .5, .5);
     glBegin(GL_QUADS);
 
     glTexCoord2f(0.0, 0.0);
