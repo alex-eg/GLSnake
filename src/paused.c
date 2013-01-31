@@ -9,7 +9,6 @@ void SPaused_Init(SApp *App)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 1024, 1024, 0);
-    //glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 512, 512);
     if (glGetError() != GL_NO_ERROR) printf("Errno %d on %d\n", glGetError(), __LINE__);
 }
 
@@ -23,7 +22,7 @@ void SPaused_ProcessEvent(SApp *App, SDL_Event *Event)
 {
     switch (Event->type) {
     case SDL_KEYDOWN : {
-        SPaused_OnKeyDown(App, Event->key.keysym.sym,Event->key.keysym.mod,Event->key.keysym.unicode);
+        SPaused_OnKeyDown(App, Event->key.keysym.sym);
         break;
     }
     case SDL_QUIT : {
@@ -35,7 +34,7 @@ void SPaused_ProcessEvent(SApp *App, SDL_Event *Event)
     }
 }
 
-void SPaused_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
+void SPaused_OnKeyDown(SApp *App, SDLKey sym)
 {
     switch (sym) {
     case SDLK_ESCAPE: { //ESC
@@ -57,7 +56,8 @@ void SPaused_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
         if (App->Paused->Position == 0) {
 	    SInGame_Switch(App);
         } else {
-	    App->Running = 0;
+	    SMainMenu_Switch(App);
+	    SMainMenu_InitGraphics();
 	};
         break;
     }

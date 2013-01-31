@@ -26,6 +26,10 @@ struct SInGame {
     int Speed;
     STGAFile textureFile;
     GLuint texture;
+
+    unsigned char Field [MATRIXSIZE * MATRIXSIZE];
+
+    int Score;
 };
 typedef struct SInGame SInGame;
 
@@ -52,7 +56,8 @@ typedef struct SInGame SInGame;
 /*--- Sound and music ---*/
 /* private         */ void SInGame_InitSound(SApp *);
 /* static          */ void SInGame_PlaySound(Sound *);
-/* public          */ void SInGame_Cleanup(SApp *);
+
+/* deinitializator */ void SInGame_Clear(SApp *);
 
 /* constructor     */ void SInGame_Create(SApp *);
 /* destructor      */ void SInGame_Delete(SApp *);

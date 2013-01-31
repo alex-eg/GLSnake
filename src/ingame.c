@@ -6,22 +6,34 @@ STexture te;
 
 void SInGame_Init(SApp *App)
 {
-    App->InGame->Head = malloc(sizeof(SPoint));
-    App->InGame->Head->x = 0;
-    App->InGame->Head->y = 0;
-    App->InGame->Head->next = NULL;
+    SInGame_Clear(App);
+    
+    SInGame *self = App->InGame;
 
-    App->InGame->dx = 0;
-    App->InGame->dy = 1;
+    for (int i = 0; i < MATRIXSIZE * MATRIXSIZE; i++) self->Field[i] = 0;
 
-    App->InGame->Food.x = rand()%MATRIXSIZE;
-    App->InGame->Food.y = rand()%MATRIXSIZE;
-    App->InGame->Food.next=NULL;
+    self->Score = 0;
 
-    App->InGame->KeyPressed = 0;
+    self->Head = malloc(sizeof(SPoint));
+    self->Head->x = 0;
+    self->Head->y = 0;
 
-    App->InGame->Timer = 0;
-    App->InGame->Speed = 1;
+    self->Field [self->Head->x * MATRIXSIZE + self->Head->y] = 1;
+    
+    self->Head->next = NULL;
+
+    self->dx = 0;
+    self->dy = 1;
+
+    self->Food.x = rand() % MATRIXSIZE;
+    self->Food.y = rand() % MATRIXSIZE;
+    self->Food.next = NULL;
+    self->Field [self->Food.x * MATRIXSIZE + self->Food.y] = 2;
+
+    self->KeyPressed = 0;
+
+    self->Timer = 0;
+    self->Speed = 1;
 
     SInGame_InitGraphics();
     SInGame_InitSound(App);
@@ -191,44 +203,70 @@ void SInGame_Loop(SApp *App)
 
 void SInGame_ProcessNewState(SApp *App) 
 {
-    int PrevX = App->InGame->Head->x;
-    int PrevY = App->InGame->Head->y;
+    SInGame *self = App->InGame;
 
-    App->InGame->Head->x+=App->InGame->dx;
-    App->InGame->Head->y+=App->InGame->dy;
+    int PrevX = self->Head->x;
+    int PrevY = self->Head->y;
 
-    App->InGame->KeyPressed = 0;
-    App->InGame->Timer = 0;
+    int HeadX = PrevX;
+    int HeadY = PrevY;
+        
+    self->Head->x += self->dx;
+    self->Head->y += self->dy;
 
-    if (App->InGame->Head->x < 0) App->InGame->Head->x+=MATRIXSIZE;
-    if (App->InGame->Head->y < 0) App->InGame->Head->y+=MATRIXSIZE;
-    if (App->InGame->Head->x >= MATRIXSIZE) App->InGame->Head->x-=MATRIXSIZE;
-    if (App->InGame->Head->y >= MATRIXSIZE) App->InGame->Head->y-=MATRIXSIZE;
+    self->Field [HeadX * MATRIXSIZE + HeadY] = 0;
 
-    if ((App->InGame->Head->x == App->InGame->Food.x) && (App->InGame->Head->y == App->InGame->Food.y)) {
-        App->InGame->Food.x = rand()%MATRIXSIZE;
-        App->InGame->Food.y = rand()%MATRIXSIZE;
-        App->InGame->Food.next = NULL;
+    self->KeyPressed = 0;
+    self->Timer = 0;
+
+    if (self->Head->x < 0) self->Head->x += MATRIXSIZE;
+    if (self->Head->y < 0) self->Head->y += MATRIXSIZE;
+    if (self->Head->x >= MATRIXSIZE) self->Head->x -= MATRIXSIZE;
+    if (self->Head->y >= MATRIXSIZE) self->Head->y -= MATRIXSIZE;
+
+    if ((self->Head->x == self->Food.x) && (self->Head->y == self->Food.y)) {
+	self->Score++;
+	self->Food.x = rand() % MATRIXSIZE;
+	self->Food.y = rand() % MATRIXSIZE;
+	while (self->Field [self->Food.x * MATRIXSIZE + self->Food.y] == 1) {
+	    self->Food.x = rand() % MATRIXSIZE;
+	    self->Food.y = rand() % MATRIXSIZE;
+	}
+		
+	self->Field [self->Food.x * MATRIXSIZE + self->Food.y] = 2;
+
+        self->Food.next = NULL;
 
         SPoint *NewSegment = malloc(sizeof(SPoint));
         NewSegment->x = PrevX;
         NewSegment->y = PrevY;
-        NewSegment->next = App->InGame->Head->next;
-	App->InGame->Head->next = NewSegment;
+        NewSegment->next = self->Head->next;
+	self->Head->next = NewSegment;
 
-	SInGame_PlaySound(&App->InGame->Nyam);
+	SInGame_PlaySound(&self->Nyam);
     } else {
-        SPoint *curr = App->InGame->Head;
+        SPoint *curr = self->Head;
         while (curr->next != NULL) {
             curr = curr->next;
-            int temp = curr->x;
+
+	    self->Field [curr->x * MATRIXSIZE + curr->y] = 0;
+
+            int temp; 
+	    temp = curr->x;
             curr->x = PrevX;
             PrevX = temp;
-            temp = curr->y;
+           
+	    temp = curr->y;
             curr->y = PrevY;
             PrevY = temp;
+
+	    self->Field [curr->x * MATRIXSIZE + curr->y] = 1;
         }
     }
+    int gameOver = 0;
+    if (self->Field [self->Head->x * MATRIXSIZE + self->Head->y] == 1) gameOver = 1;
+    
+    if (gameOver) printf("GAME OVER! SCRORE: %d\n", self->Score);
 }
 
 void SInGame_ProcessEvent(SApp *App, SDL_Event *Event)
@@ -296,7 +334,7 @@ void SInGame_OnKeyDown(SApp *App, SDLKey sym)
 	App->InGame->Speed--;
 	break;
     }
-    case SDLK_KP_MINUS: { ///Num-
+    case SDLK_KP_MINUS: { //Num-
 	App->InGame->Speed++;
 	break;
     }
@@ -304,9 +342,10 @@ void SInGame_OnKeyDown(SApp *App, SDLKey sym)
     }
 }
 
-void SInGame_Delete(SApp *App)
+void SInGame_Clear(SApp *App)
 {
     SInGame *self = App->InGame;
+    if (self->Head == NULL) return;
     if (self->Head->next == NULL)
 	free(self->Head);
     else if (self->Head->next->next == NULL) {
@@ -325,8 +364,12 @@ void SInGame_Delete(SApp *App)
 	}
 	free(self->Head);
     }
+}
 
-    free(self);
+void SInGame_Delete(SApp *App)
+{
+    SInGame_Clear(App);
+    free(App->InGame);
     App->InGame = NULL;
 }
 
@@ -335,6 +378,7 @@ void SInGame_Create(SApp *App)
     SInGame *self;
     App->InGame = self = (SInGame *) malloc(sizeof(SInGame));
     self->App = App;
+    self->Head = NULL;
 }
 
 void SInGame_Switch(SApp *App)

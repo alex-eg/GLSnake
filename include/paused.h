@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "ttfonts.h"
 #include "gui.h"
+#include "mainmenu.h"
 
 struct SPaused {
     SApp *App;
@@ -22,7 +23,7 @@ typedef struct SPaused SPaused;
 /* public         */ void SPaused_Loop(SApp *);
 
 /*--- EVENT PROCESSING --- */
-/* private        */ void SPaused_OnKeyDown(SApp *, SDLKey, SDLMod, Uint16);
+/* private        */ void SPaused_OnKeyDown(SApp *, SDLKey);
 /* public         */ void SPaused_ProcessEvent(SApp *, SDL_Event *);
 /* private        */ void SPaused_ProcessNewState(SApp *);
 
