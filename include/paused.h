@@ -36,7 +36,6 @@ typedef struct SPaused SPaused;
 
 /*--- Sound and music! ---*/
 /* private         */ void SPaused_InitSound(SApp *);
-/* static          */ /*void SPaused_PlaySound(Sound *);*/
 /* public          */ void SPaused_Cleanup(SApp *);
 
 /* constructor     */ void SPaused_Create(SApp *);

@@ -5,13 +5,16 @@ void SMainMenu_Render(SApp *App)
     SMainMenu *self = App->MainMenu;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    SFont_glEnable2D();
+    SLabel_Render(self->MainFrame);
+    SLabel_Render(self->Logo);
+         
     SButton_Render(self->Start);
     SButton_Render(self->Exit);
     SButton_Render(self->HighScores);
 
-    SLabel_Render(self->Logo);
-    SLabel_Render(self->MainFrame);
-         
+    SFont_glDisable2D();
+
     SDL_GL_SwapBuffers();
 }
 
@@ -49,22 +52,25 @@ void SMainMenu_InitGUI(SApp *App)
     SLabel_SetTexture(self->MainFrame, RESOURCE_DIR "/textures/background.tga");
 
     self->Logo = SLabel_Create();
-    SLabel_Set(self->Logo, (WIDTH - 400) / 2 - 10, 100, 400, 380);
+    SLabel_Set(self->Logo, WIDTH / 2 - 210, 120, 400, 380);
     SLabel_SetTexture(self->Logo, RESOURCE_DIR "/textures/logo.tga");
 
-    self->Start = SButton_Create();
-    SButton_Set(self->Start, (WIDTH - 140) / 2, 380, 140, 30);
-    SButton_SetTexture(self->Start, RESOURCE_DIR "/textures/start.tga");
+    self->Start = SButton_Create(App);
+    SButton_Set(self->Start, WIDTH / 2 - 76, 180, 140, 30);
+    //    SButton_SetTexture(self->Start, RESOURCE_DIR "/textures/start.tga");
+    SButton_SetText(self->Start, "Start");
     SButton_Swap(self->Start);
     SButton_SetCallback(self->Start, SMainMenu_StartGame);
 
-    self->HighScores = SButton_Create();
-    SButton_Set(self->HighScores, (WIDTH - 140) / 2, 430, 140, 30);
-    SButton_SetTexture(self->HighScores, RESOURCE_DIR "/textures/scores.tga");
+    self->HighScores = SButton_Create(App);
+    SButton_Set(self->HighScores, WIDTH / 2 - 140, 130, 140, 30);
+    SButton_SetText(self->HighScores, "High Scores");
+    //    SButton_SetTexture(self->HighScores, RESOURCE_DIR "/textures/scores.tga");
 
-    self->Exit = SButton_Create();
-    SButton_Set(self->Exit, (WIDTH - 140) / 2, 480, 140, 30);
-    SButton_SetTexture(self->Exit, RESOURCE_DIR "/textures/exit.tga");
+    self->Exit = SButton_Create(App);
+    SButton_Set(self->Exit, WIDTH / 2 - 64, 80, 140, 30);
+    SButton_SetText(self->Exit, "Exit");
+    //    SButton_SetTexture(self->Exit, RESOURCE_DIR "/textures/exit.tga");
     SButton_SetCallback(self->Exit, SMainMenu_ExitApp);
 
     SButton_Link(self->Start, self->HighScores);

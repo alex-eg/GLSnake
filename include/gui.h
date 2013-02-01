@@ -3,6 +3,7 @@
 
 #include "globals.h"
 #include "targa.h"
+#include "ttfonts.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,11 +24,13 @@ struct SLabel {
 typedef struct SLabel SLabel;
 
 struct SButton {
+    SApp *App;
     int x, y, width, height;
     STexture texture;
     int selected;
     struct SButton *next, *prev;
     void (*callback)(SApp *);
+    char *text;
 };
 typedef struct SButton SButton;
     
@@ -36,7 +39,7 @@ int STexture_Load(STexture *, char *filename);
 void STexture_Unload(STexture *);
 
 /*--- Widgets! ---*/
-SButton * SButton_Create(void);
+SButton * SButton_Create(SApp *);
 void SButton_Set(SButton *self, int x, int y, int w, int h);
 void SButton_Delete(SButton *self);
 void SButton_SetTexture(SButton *self, char *filename);
@@ -46,6 +49,7 @@ int SButton_Swap(SButton *self); /* Swaps state and returns new value */
 void SButton_SetCallback(SButton *self, void (*pointer)(SApp *));
 void SButton_Call(SButton *self, SApp *);
 void SButton_DefaultCallback(SApp *);
+void SButton_SetText(SButton *self, const char *text);
 
 SLabel * SLabel_Create(void);
 void SLabel_Set(SLabel *self, int x, int y, int w, int h);

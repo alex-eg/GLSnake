@@ -69,13 +69,16 @@ void SLabel_Render(SLabel *self)
     glColor3f(1.0, 1.0, 1.0);
     glBegin(GL_QUADS);
 
-    glTexCoord2f(0.0,     0.0);
-    glVertex2f  (self->x, self->y);
-    glTexCoord2f(1.0,     0.0);
-    glVertex2f  (self->x + self->width, self->y);
-    glTexCoord2f(1.0,     1.0);
-    glVertex2f  (self->x + self->width, self->y + self->height);
     glTexCoord2f(0.0,     1.0);
+    glVertex2f  (self->x, self->y);
+
+    glTexCoord2f(1.0,     1.0);
+    glVertex2f  (self->x + self->width, self->y);
+
+    glTexCoord2f(1.0,     0.0);
+    glVertex2f  (self->x + self->width, self->y + self->height);
+
+    glTexCoord2f(0.0,     0.0);
     glVertex2f  (self->x, self->y + self->height);
 
     glEnd();
@@ -89,17 +92,23 @@ void SLabel_Delete(SLabel *self)
 
 /* SBUTTON */
 
-SButton * SButton_Create(void)
+SButton * SButton_Create(SApp *App)
 {
     SButton *self = malloc(sizeof(SButton));
     SButton_Set(self, 0, 0, 10, 10);
     SButton_SetCallback(self, SButton_DefaultCallback);
+    self->text = NULL;
+    self->App = App;
     return self;
 }
 
 void SButton_Delete(SButton *self)
 {
     STexture_Unload(&self->texture);
+    if (self->text) {
+	free (self->text);
+	self->text = NULL;
+    }
 }
 
 void SButton_Set(SButton *self, int x, int y, int w, int h)
@@ -118,36 +127,56 @@ void SButton_SetTexture(SButton *self, char *filename)
     STexture_Load(&self->texture, filename);
 }
 
+void SButton_SetText(SButton *self, const char *text)
+{
+    int len = strlen(text);
+    if (self->text) free (self->text);
+    self->text = malloc(sizeof(char) * len);
+    strcpy(self->text, text);
+}
+
 void SButton_Render(SButton *self)
 {
-    glBindTexture(GL_TEXTURE_2D, self->texture.texID);
 
-    glColor3f(1.0, 1.0, 1.0);
-    glBegin(GL_QUADS);
+    SFont_glEnable2D();
+    if (glIsTexture(self->texture.texID)) {
+	glEnable(GL_TEXTURE_2D);
 
-    glTexCoord2f(0.0,     0.0);
-    glVertex2f  (self->x, self->y);
-    glTexCoord2f(1.0,     0.0);
-    glVertex2f  (self->x + self->width, self->y);
-    glTexCoord2f(1.0,     1.0);
-    glVertex2f  (self->x + self->width, self->y + self->height);
-    glTexCoord2f(0.0,     1.0);
-    glVertex2f  (self->x, self->y + self->height);
+	glBindTexture(GL_TEXTURE_2D, self->texture.texID);
 
-    glEnd();
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_QUADS);
 
+	glTexCoord2f(0.0,     0.0);
+	glVertex2f  (self->x, self->y);
+	glTexCoord2f(1.0,     0.0);
+	glVertex2f  (self->x + self->width, self->y);
+	glTexCoord2f(1.0,     1.0);
+	glVertex2f  (self->x + self->width, self->y + self->height);
+	glTexCoord2f(0.0,     1.0);
+	glVertex2f  (self->x, self->y + self->height);
 
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+    }
+
+    SDL_Rect position;
+    SDL_Color color = { 255, 255, 255 };
+
+    if (self->text) {
+	position.x = self->x;
+	position.y = self->y;
+	SFont_RenderText(self->App->Font, self->text, &position, &color, size48);
+    }
+
+    SFont_glDisable2D();
     if (!self->selected) return;
-    glDisable(GL_TEXTURE_2D);
 
-    glColor3f(1.0, 1.0, 1.0);
-    glBegin(GL_TRIANGLES);
-    glVertex2f(self->x - 30, self->y);
-    glVertex2f(self->x - 2 , self->y + self->height / 2);
-    glVertex2f(self->x - 30, self->y + self->height);
-    glEnd();
-
-    glEnable(GL_TEXTURE_2D);
+    SFont_glEnable2D();
+    position.y = self->y;
+    position.x = self->x - 30;
+    SFont_RenderText(self->App->Font, "*", &position, &color, size48);
+    SFont_glDisable2D();
 }
 
 int SButton_Swap(SButton *self)
