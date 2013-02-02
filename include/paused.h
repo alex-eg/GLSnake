@@ -9,7 +9,6 @@
 struct SPaused {
     SApp *App;
     int Position;
-    GLubyte *snapshot;
     GLuint texture;
 };
 typedef struct SPaused SPaused;

@@ -6,6 +6,7 @@
 #include "paused.h"
 #include "mainmenu.h"
 #include "ttfonts.h"
+#include "gameover.h"
 
 int SInit(SApp *);
 void SCleanup(SApp *);
@@ -50,7 +51,9 @@ int SInit(SApp *App)
     App->Paused = NULL;
     App->HighScore = NULL;
     App->MainMenu = NULL;
+    App->GameOver = NULL;
 
+    SGameOver_Create(App);
     SInGame_Create(App);
     SPaused_Create(App);
     SMainMenu_Create(App);

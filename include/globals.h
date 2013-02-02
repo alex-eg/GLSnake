@@ -26,10 +26,13 @@ struct SApp {
 	void (* Cleanup)(struct SApp *);
     } State;
     SDL_Surface *SDisplay;
+
     struct SInGame *InGame;
     struct SPaused *Paused;
     struct SHighScore *HighScore;
     struct SMainMenu *MainMenu;
+    struct SGameOver *GameOver;
+
     struct SFont *Font;
 };
 typedef struct SApp SApp;

@@ -1,3 +1,4 @@
+#include "gameover.h"
 #include "ingame.h"
 #include "paused.h"
 #include "gui.h"
@@ -266,7 +267,11 @@ void SInGame_ProcessNewState(SApp *App)
     int gameOver = 0;
     if (self->Field [self->Head->x * MATRIXSIZE + self->Head->y] == 1) gameOver = 1;
     
-    if (gameOver) printf("GAME OVER! SCRORE: %d\n", self->Score);
+    if (gameOver) {
+	SGameOver_Init(App);
+	SGameOver_SetScore(App, self->Score);
+	SGameOver_Switch(App);
+    }
 }
 
 void SInGame_ProcessEvent(SApp *App, SDL_Event *Event)

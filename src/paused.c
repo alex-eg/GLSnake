@@ -40,17 +40,10 @@ void SPaused_OnKeyDown(SApp *App, SDLKey sym)
     case SDLK_ESCAPE: { //ESC
 	break;
     }
-    case SDLK_UP: { //UP Arrow
-        if (App->Paused->Position != 0) {
-	    --App->Paused->Position;
-        };
-        break;
-    }
+    case SDLK_UP:  //UP Arrow
     case SDLK_DOWN: { //DOWN Arrow
-        if (App->Paused->Position != 1) {
-	    ++App->Paused->Position;
-        };
-        break;
+	App->Paused->Position ^= 1; 
+	break;
     }
     case SDLK_RETURN: { //ENTER
         if (App->Paused->Position == 0) {
@@ -142,6 +135,3 @@ void SPaused_Switch(SApp *App)
     App->State.Render = &SPaused_Render;
     App->State.Cleanup = &SPaused_Delete;
 }
-
-/*--- Fonts! ---*/
-
