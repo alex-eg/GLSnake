@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "gui.h"
 #include "ingame.h"
+#include "highscores.h"
 
 struct SMainMenu {
     SApp *App;
@@ -16,6 +17,7 @@ struct SMainMenu {
     SButton *Exit;
 
     SLabel *Logo;
+    int ifhighscores;
 };
 typedef struct SMainMenu SMainMenu;
 

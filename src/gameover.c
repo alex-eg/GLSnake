@@ -6,6 +6,9 @@ void SGameOver_Create(SApp *App)
     App->GameOver = self;
     self->App = App;
     self->score = -1;
+    self->highscored = 0;
+    self->symbols = 0;
+    strcpy(self->name, "_");
 }
 
 void SGameOver_Init(SApp *App)
@@ -21,6 +24,10 @@ void SGameOver_SetScore(SApp *App, int score)
 {
     SGameOver *self = App->GameOver;
     self->score = score;
+    if (self->score >= App->HighScores->table.first ||
+	self->score >= App->HighScores->table.second ||
+	self->score >= App->HighScores->table.third)
+	self->highscored = 1;
 }
 
 void SGameOver_Render(SApp *App)
@@ -29,9 +36,9 @@ void SGameOver_Render(SApp *App)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     SDL_Rect position;
-    SDL_Color color = { 255, 127, 200 };
+    SDL_Color color = { 200, 0, 255 };
     position.x = WIDTH / 2 - 120;
-    position.y = HEIGHT / 2 + 100;
+    position.y = HEIGHT / 2 + 200;
     
     SFont_glEnable2D();
 
@@ -59,14 +66,28 @@ void SGameOver_Render(SApp *App)
     glDisable(GL_TEXTURE_2D);   
     
     SFont_RenderText(App->Font, "Game Over!", &position, &color, size48);
-    position.y -= 84;
+
+    SHighScores_Render(App);
+
+    position.y -= 380;
     position.x -= 40;
     color.g = 255;
     color.b = 255;
+    color.r = 255;
     char s[64];
     sprintf(s, "Your score: \%d", self->score);
     SFont_RenderText(App->Font, s, &position, &color, size48);
 
+    if (self->highscored) {
+	position.y -= 48;
+	position.x -= 108;
+	sprintf(s, "Input name: %s", self->name);
+	SFont_RenderText(App->Font, s, &position, &color, size48);
+    } else {
+	position.y -= 36;
+	position.x -= 60;
+	SFont_RenderText(App->Font, "Press Enter to exit to Main Menu", &position, &color, size24);
+    }
     SDL_GL_SwapBuffers();
 }
 
@@ -88,26 +109,74 @@ void SGameOver_ProcessEvent(SApp *App, SDL_Event *event)
 
 void SGameOver_OnKeyDown(SApp *App, SDLKey sym)
 {
-    /*switch (sym) {
-    case SDLK_ESCAPE: { //ESC
-	break;
-    }
-    case SDLK_UP:  //UP Arrow
-    case SDLK_DOWN: { //DOWN Arrow
-	App->Paused->Position ^= 1; 
-	break;
-    }
-    case SDLK_RETURN: { //ENTER
-        if (App->Paused->Position == 0) {
-	    SInGame_Switch(App);
-        } else {
+    SGameOver *self = App->GameOver;
+    if (self->highscored) {
+	if (sym >= SDLK_a && sym <= SDLK_z) { /* it's character, appending to name */
+	    /* a has number 97 */
+	    int start = SDLK_a - 'a'; /* sdl - ascii relative offset */
+	    char c = sym - start;
+	    if (self->symbols < 8) {
+		int symbols = self->symbols;
+		self->name[symbols] = c;
+		self->name[symbols + 1] = (symbols < 7) ? '_' : '\0';
+		self->name[symbols + 2] = '\0';
+		self->symbols ++;
+	    }
+	}
+	switch (sym) {
+	case SDLK_RETURN: {
+	    self->name[self->symbols] = '\0';
+	    HighScoreTable *table = &App->HighScores->table;
+	    if (self->score >= table->first) {
+		table->third = table->second;
+		strcpy(table->nameThird, table->nameSecond);
+		table->second = table->first;
+		strcpy(table->nameSecond, table->nameFirst);
+		
+		table->first = self->score;
+		strcpy(table->nameFirst, self->name);
+	    } else if (self->score >= table->second) {
+		table->third = table->second;
+		strcpy(table->nameThird, table->nameSecond);
+
+		table->second = self->score;
+		strcpy(self->name, table->nameSecond);
+	    } else {
+		table->third = self->score;
+		strcpy(self->name, table->nameThird);
+	    }
+	    /* save name to highscores */
+	    self->highscored = 0;
+	    self->name[0] = '\0';
+	    self->symbols = 0;
+	    self->score = 0;
+	    break;
+	}
+	case SDLK_ESCAPE: { 
+	    self->name[0] = '\0';
+	    self->symbols = 0;
+	    self->score = 0;
 	    SMainMenu_Switch(App);
-	    SMainMenu_InitGraphics();
-	};
-        break;
+	    break;
+	}
+	case SDLK_BACKSPACE: {
+	    self->symbols--;
+	    self->name[self->symbols] = '_';
+	    self->name[self->symbols + 1] = '\0';
+	    break;
+	}
+	default: break;
+	}
+    } else {	
+	switch (sym) {
+	case SDLK_RETURN:
+	case SDLK_ESCAPE: { 
+	    SMainMenu_Switch(App);
+	    break;
+	}
+	default: break;
+	}
     }
-    default: break;
-    }*/
 }
 
 

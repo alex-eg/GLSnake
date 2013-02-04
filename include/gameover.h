@@ -1,13 +1,18 @@
 #ifndef _S_GAMEOVER
 #define _S_GAMEOVER
 
+#include "highscores.h"
 #include "globals.h"
 #include "ttfonts.h"
+#include "mainmenu.h"
 
 struct SGameOver {
     SApp *App;
     int score;
     GLuint texture;
+    int highscored;
+    char name[10];
+    int symbols; /* Number of symbols in name */
 };
 typedef struct SGameOver SGameOver;
 
@@ -25,8 +30,8 @@ typedef struct SGameOver SGameOver;
 /*--- GRAPHICS ---*/
 /* public         */ void SGameOver_Render(SApp *);
 
-/* constructor     */ void SGameOver_Create(SApp *);
-/* destructor      */ void SGameOver_Delete(SApp *);
-/* switcher        */ void SGameOver_Switch(SApp *);
+/* constructor    */ void SGameOver_Create(SApp *);
+/* destructor     */ void SGameOver_Delete(SApp *);
+/* switcher       */ void SGameOver_Switch(SApp *);
 
 #endif /* ifndef _S_GAMEOVER */

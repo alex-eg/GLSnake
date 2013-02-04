@@ -7,14 +7,17 @@ void SMainMenu_Render(SApp *App)
 
     SFont_glEnable2D();
     SLabel_Render(self->MainFrame);
-    SLabel_Render(self->Logo);
+    if (self->ifhighscores) {
+	SFont_glDisable2D();
+	SHighScores_Render(App);
+    } else {
+	SLabel_Render(self->Logo);
          
-    SButton_Render(self->Start);
-    SButton_Render(self->Exit);
-    SButton_Render(self->HighScores);
-
-    SFont_glDisable2D();
-
+	SButton_Render(self->Start);
+	SButton_Render(self->Exit);
+	SButton_Render(self->HighScores);
+	SFont_glDisable2D();
+    }
     SDL_GL_SwapBuffers();
 }
 
@@ -57,7 +60,6 @@ void SMainMenu_InitGUI(SApp *App)
 
     self->Start = SButton_Create(App);
     SButton_Set(self->Start, WIDTH / 2 - 76, 180, 140, 30);
-    //    SButton_SetTexture(self->Start, RESOURCE_DIR "/textures/start.tga");
     SButton_SetText(self->Start, "Start");
     SButton_Swap(self->Start);
     SButton_SetCallback(self->Start, SMainMenu_StartGame);
@@ -65,12 +67,11 @@ void SMainMenu_InitGUI(SApp *App)
     self->HighScores = SButton_Create(App);
     SButton_Set(self->HighScores, WIDTH / 2 - 140, 130, 140, 30);
     SButton_SetText(self->HighScores, "High Scores");
-    //    SButton_SetTexture(self->HighScores, RESOURCE_DIR "/textures/scores.tga");
-
+    SButton_SetCallback(self->HighScores, SMainMenu_ShowHighScores);
+ 
     self->Exit = SButton_Create(App);
     SButton_Set(self->Exit, WIDTH / 2 - 64, 80, 140, 30);
     SButton_SetText(self->Exit, "Exit");
-    //    SButton_SetTexture(self->Exit, RESOURCE_DIR "/textures/exit.tga");
     SButton_SetCallback(self->Exit, SMainMenu_ExitApp);
 
     SButton_Link(self->Start, self->HighScores);
@@ -108,6 +109,10 @@ void SMainMenu_ProcessEvent(SApp *App, SDL_Event *Event)
 void SMainMenu_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
 {
     SMainMenu *self = App->MainMenu;
+    if (self->ifhighscores) { 
+	self->ifhighscores = 0; 
+	return;
+    }
     switch(sym) {
     case SDLK_UP: {
 	SButton_Swap(self->selection);
@@ -144,6 +149,7 @@ void SMainMenu_Create(SApp *App)
     SMainMenu *self;
     App->MainMenu = self = (SMainMenu *) malloc(sizeof(SMainMenu));
     self->App = App;
+    self->ifhighscores = 0;
 }
 
 void SMainMenu_Switch(SApp *App)
@@ -169,5 +175,5 @@ void SMainMenu_ExitApp(SApp *App)
 
 void SMainMenu_ShowHighScores(SApp *App)
 {
-
+    App->MainMenu->ifhighscores = 1;
 }
