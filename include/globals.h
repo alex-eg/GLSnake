@@ -29,7 +29,7 @@ struct SApp {
 
     struct SInGame *InGame;
     struct SPaused *Paused;
-    struct SHighScore *HighScore;
+    struct SHighScores *HighScores;
     struct SMainMenu *MainMenu;
     struct SGameOver *GameOver;
 
