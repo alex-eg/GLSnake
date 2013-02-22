@@ -72,27 +72,29 @@ void SInGame_InitSound(SApp *App)
     App->InGame->Music = NULL;
 
     int audio_rate = 22050;
-    Uint16 audio_format = AUDIO_S16; /* 16-bit stereo */
+    Uint16 audio_format = AUDIO_S16SYS; /* 16-bit stereo */
     int audio_channels = 2;
     int audio_buffers = 512; 
 
-    if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
-	printf("Unable to open audio!\n");
+    if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)!=0) {
+	printf("Unable to open audio: %s\n", Mix_GetError());
 	exit(EXIT_FAILURE);
     }
 
     
-    App->InGame->Music = Mix_LoadMUS(RESOURCE_DIR "sound/this.ogg");
-    /*    Mix_PlayMusic(App->InGame->Music, -1);*/
+    App->InGame->Music = Mix_LoadMUS(RESOURCE_DIR "/sound/this.ogg");
+    if (App->InGame->Music == NULL) printf("Unable to load sound: %s\n", Mix_GetError());
+    Mix_PlayMusic(App->InGame->Music, -1);
      
-    App->InGame->Nyam.Snd = Mix_LoadWAV(RESOURCE_DIR "sound/nom.ogg");
+    App->InGame->Nyam.Snd = Mix_LoadWAV(RESOURCE_DIR "/sound/nom.ogg");
+    if (App->InGame->Nyam.Snd == NULL) printf("Unable to load sound: %s\n", Mix_GetError());
     App->InGame->Nyam.Chnl = -1;
 }
 
 void SInGame_PlaySound(Sound *Snd) 
 {
-    /*    if (Snd->Chnl < 0) Snd->Chnl = Mix_PlayChannel(Snd->Chnl, Snd->Snd, 0);
-	  Snd->Chnl = -1;*/
+    if (Snd->Chnl < 0) Snd->Chnl = Mix_PlayChannel(Snd->Chnl, Snd->Snd, 0);
+    Snd->Chnl = -1;
 }
 
 void SInGame_Render(SApp *App)

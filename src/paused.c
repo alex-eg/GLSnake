@@ -9,7 +9,7 @@ void SPaused_Init(SApp *App)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 1024, 1024, 0);
-    if (glGetError() != GL_NO_ERROR) printf("Errno %d on %d\n", glGetError(), __LINE__);
+    if (glGetError() != GL_NO_ERROR) printf("Errno %d on %d in file %s\n", glGetError(), __LINE__, __FILE__);
 }
 
 void SPaused_Loop(SApp *App)
