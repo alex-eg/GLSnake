@@ -64,7 +64,7 @@ static int readImage(STGAFile *file, FILE *from)
     TGAshort w = header->width, h = header->height;
     TGAbyte bpp = header->pixelDepth / 8;
     image->imageData = malloc(w * h * bpp * sizeof(TGAbyte));
-    printf("Allocating %lu bytyes for the image %dx%d pixels\n", w * h * bpp * sizeof(TGAbyte), w, h);
+    printf("Allocating %lu bytes for the image %dx%d pixels\n", w * h * bpp * sizeof(TGAbyte), w, h);
     if (fread(image->imageData, sizeof(TGAbyte), w * h * bpp, from) != (w * h * bpp)) return E_CANNOT_READ_DATA;
     image->imageID = image->colorMapData = image->imageData;
     return E_SUCCESS;
