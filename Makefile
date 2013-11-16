@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS = -g -std=c99 -Wall -I$(INCPATH) -DRESOURCE_DIR=\"$(RESPATH)\"
-LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf
+LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf -lm
 
 OBJPATH = ./obj
 BINPATH = ./bin
