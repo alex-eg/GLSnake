@@ -115,10 +115,10 @@ void SGameOver_OnKeyDown(SApp *App, SDLKey sym)
 	    /* a has number 97 */
 	    int start = SDLK_a - 'a'; /* sdl - ascii relative offset */
 	    char c = sym - start;
-	    if (self->symbols < 8) {
+	    if (self->symbols < 7) {
 		int symbols = self->symbols;
 		self->name[symbols] = c;
-		self->name[symbols + 1] = (symbols < 7) ? '_' : '\0';
+		self->name[symbols + 1] = (symbols < 6) ? '_' : '\0';
 		self->name[symbols + 2] = '\0';
 		self->symbols ++;
 	    }
@@ -129,21 +129,21 @@ void SGameOver_OnKeyDown(SApp *App, SDLKey sym)
 	    HighScoreTable *table = &App->HighScores->table;
 	    if (self->score >= table->first) {
 		table->third = table->second;
-		strcpy(table->nameThird, table->nameSecond);
+		memcpy(table->nameThird, table->nameSecond, 8);
 		table->second = table->first;
-		strcpy(table->nameSecond, table->nameFirst);
+		memcpy(table->nameSecond, table->nameFirst, 8);
 		
 		table->first = self->score;
-		strcpy(table->nameFirst, self->name);
+		memcpy(table->nameFirst, self->name, 8);
 	    } else if (self->score >= table->second) {
 		table->third = table->second;
-		strcpy(table->nameThird, table->nameSecond);
+		memcpy(table->nameThird, table->nameSecond, 8);
 
 		table->second = self->score;
-		strcpy(self->name, table->nameSecond);
+		memcpy(self->name, table->nameSecond, 8);
 	    } else {
 		table->third = self->score;
-		strcpy(self->name, table->nameThird);
+		memcpy(self->name, table->nameThird, 8);
 	    }
 	    /* save name to highscores */
 	    self->highscored = 0;
