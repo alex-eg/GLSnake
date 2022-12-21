@@ -11,7 +11,7 @@ sources = files([
 ])
 
 dependencies = [
-  dependency('gl'),
+  dependency('gl', method: 'system'),
   dependency('sdl2'),
   dependency('sdl2_mixer'),
   dependency('sdl2_ttf'),
