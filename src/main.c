@@ -31,7 +31,14 @@ int main(int argc, char** argv)
     printf("Entering loop...\n");
     while (Snake.Running) {
         while (SDL_PollEvent(&Event)) {
-            Snake.State.Event(&Snake, &Event);
+            switch (Event.type) {
+            case SDL_QUIT : {
+                     Snake.Running = 0;
+                     break;
+                 }
+            default:
+                Snake.State.Event(&Snake, &Event);
+            }
         }
         Snake.State.Loop(&Snake);
         Snake.State.Render(&Snake);
