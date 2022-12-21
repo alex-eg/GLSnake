@@ -1,6 +1,7 @@
 #ifndef _S_PAUSED
 #define _S_PAUSED
 
+#include "SDL_keycode.h"
 #include "globals.h"
 #include "ttfonts.h"
 #include "gui.h"
@@ -22,7 +23,7 @@ typedef struct SPaused SPaused;
 /* public         */ void SPaused_Loop(SApp *);
 
 /*--- EVENT PROCESSING --- */
-/* private        */ void SPaused_OnKeyDown(SApp *, SDLKey);
+/* private        */ void SPaused_OnKeyDown(SApp *, SDL_Keycode);
 /* public         */ void SPaused_ProcessEvent(SApp *, SDL_Event *);
 /* private        */ void SPaused_ProcessNewState(SApp *);
 

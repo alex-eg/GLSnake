@@ -1,9 +1,9 @@
 #ifndef _S_GLOB
 #define _S_GLOB
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <GL/gl.h>
-#include <SDL/SDL_mixer.h>
+#include <SDL_mixer.h>
 
 #define CUBESIZE 30
 #define CELLSIZE 36
@@ -25,7 +25,8 @@ struct SApp {
 	void (* Render)(struct SApp *);
 	void (* Cleanup)(struct SApp *);
     } State;
-    SDL_Surface *SDisplay;
+    SDL_Window *SWindow;
+    SDL_Renderer *SRenderer;
 
     struct SInGame *InGame;
     struct SPaused *Paused;

@@ -1,4 +1,6 @@
 #include "paused.h"
+#include "SDL_events.h"
+#include "SDL_video.h"
 #include "ingame.h"
 
 void SPaused_Init(SApp *App)
@@ -14,7 +16,7 @@ void SPaused_Init(SApp *App)
 
 void SPaused_Loop(SApp *App)
 {
-    /* Stub! D: 
+    /* Stub! D:
      Virtual function mechanism in C++ makes more sense now */
 }
 
@@ -34,7 +36,7 @@ void SPaused_ProcessEvent(SApp *App, SDL_Event *Event)
     }
 }
 
-void SPaused_OnKeyDown(SApp *App, SDLKey sym)
+void SPaused_OnKeyDown(SApp *App, SDL_Keycode sym)
 {
     switch (sym) {
     case SDLK_ESCAPE: { //ESC
@@ -42,7 +44,7 @@ void SPaused_OnKeyDown(SApp *App, SDLKey sym)
     }
     case SDLK_UP:  //UP Arrow
     case SDLK_DOWN: { //DOWN Arrow
-	App->Paused->Position ^= 1; 
+	App->Paused->Position ^= 1;
 	break;
     }
     case SDLK_RETURN: { //ENTER
@@ -92,7 +94,7 @@ void SPaused_Render(SApp *App)
 
     glEnd();
 
-    glDisable(GL_TEXTURE_2D);   
+    glDisable(GL_TEXTURE_2D);
 
     SFont_RenderText(App->Font, "Continue", &position, &color, size48);
     position.y -= 64;
@@ -108,13 +110,13 @@ void SPaused_Render(SApp *App)
     }
 
     SFont_glDisable2D();
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(App->SWindow);
 }
 
 void SPaused_Delete(SApp *App)
 {
     SPaused *self = App->Paused;
-    glDeleteTextures(1, &self->texture);    
+    glDeleteTextures(1, &self->texture);
     free(self);
     App->Paused = NULL;
 }

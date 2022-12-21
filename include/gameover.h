@@ -23,7 +23,7 @@ typedef struct SGameOver SGameOver;
 /* public         */ void SGameOver_Loop(SApp *);
 
 /*--- EVENT PROCESSING --- */
-/* private        */ void SGameOver_OnKeyDown(SApp *, SDLKey);
+/* private        */ void SGameOver_OnKeyDown(SApp *, SDL_Keycode);
 /* public         */ void SGameOver_ProcessEvent(SApp *, SDL_Event *);
 /* private        */ void SGameOver_ProcessNewState(SApp *);
 

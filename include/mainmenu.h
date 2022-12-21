@@ -30,7 +30,7 @@ typedef struct SMainMenu SMainMenu;
 /* public         */ void SMainMenu_Loop(SApp *);
 
 /*--- EVENT PROCESSING --- */
-/* private        */ void SMainMenu_OnKeyDown(SApp *, SDLKey, SDLMod, Uint16);
+/* private        */ void SMainMenu_OnKeyDown(SApp *, SDL_KeyCode, SDL_Keymod);
 /* public         */ void SMainMenu_ProcessEvent(SApp *, SDL_Event *);
 
 /*--- GRAPHICS ---*/

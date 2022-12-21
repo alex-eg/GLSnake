@@ -42,7 +42,7 @@ typedef struct SInGame SInGame;
 /* public         */ void SInGame_Loop(SApp *);
 
 /*--- EVENT PROCESSING --- */
-/* private        */ void SInGame_OnKeyDown(SApp *, SDLKey);
+/* private        */ void SInGame_OnKeyDown(SApp *, SDL_Keycode);
 /* public         */ void SInGame_ProcessEvent(SApp *, SDL_Event *);
 /* private        */ void SInGame_ProcessNewState(SApp *);
 
