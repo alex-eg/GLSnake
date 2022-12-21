@@ -46,6 +46,9 @@ int main(int argc, char** argv)
 int SInit(SApp *App)
 {
     int SdlRet = SInitSdl(App);
+    if (SdlRet != 0) {
+        return SdlRet;
+    }
 
     SFont_Create(App);
     SFont_InitTTF(App->Font, RESOURCE_DIR "/fonts/aesymatt.ttf");
