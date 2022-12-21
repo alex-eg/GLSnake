@@ -36,7 +36,7 @@ static int isNotNewTga(char *filename)
     if (!(in = fopen(filename, "rb"))) return E_INVALID_FILE;
     if ((error = readFooter(&footer, in))) return error;
     if (memcmp("TRUEVISION-XFILE", footer.signature, sizeof(TGAbyte)*16)) return E_NOT_A_TGA;
-    
+
     fclose(in);
     return E_SUCCESS;
 }
@@ -137,13 +137,13 @@ int main(int argc, char **argv)
 
     STGAFooter f;
     STGAHeader h;
-    
+
     FILE *in;
     in = fopen(argv[1], "rb");
-    
+
     readHeader(&h, in);
     readFooter(&f, in);
-    
+
     printHeader(&h);
     printf("<....>\n");
     printFooter(&f);

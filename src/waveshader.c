@@ -105,23 +105,23 @@ int init(void)
 
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glLightfv( GL_LIGHT0, GL_AMBIENT , amb  );
-    
+
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
 
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_COLOR_MATERIAL);
-    
+
     glMatrixMode(GL_PROJECTION);
     gluPerspective(50,1,0.1,600);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0,0,120,0,0,0,-1,0,0);    
+    gluLookAt(0,0,120,0,0,0,-1,0,0);
     glColor3f(0.7, 0.3, 0.1);
 
-    
+
     /*-----------------------------------------------------------------------------------*/
     GLuint VertexShaderObject, FragmentShaderObject;
 
@@ -162,7 +162,7 @@ int init(void)
 	printf("Program failed linking\n");
 	return 5;
     }
-    
+
     glUseProgram(Program);
     return 0;
 }
@@ -173,8 +173,8 @@ void render(void)
 
      glUniform1f(timeindex, time);
      printf("time: %f\n", time);
-     //cube(300-120,300-120,0,240); 
-     glutSolidTeapot(25); 
+     //cube(300-120,300-120,0,240);
+     glutSolidTeapot(25);
      SDL_GL_SwapBuffers();
 }
 
