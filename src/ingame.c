@@ -114,7 +114,7 @@ void SInGame_Render(SApp *App)
     glColor3f(0.1, 0.5, 0.5);
     SInGame_Cube(App, App->InGame->Head->x,App->InGame->Head->y, CUBESIZE+2);
     SInGame_Grid();
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(App->SWindow);
 }
 
 void SInGame_Cube(SApp *App, int x, int y, int size)
@@ -204,7 +204,7 @@ void SInGame_Loop(SApp *App)
     } else App->InGame->Timer++;
 }
 
-void SInGame_ProcessNewState(SApp *App) 
+void SInGame_ProcessNewState(SApp *App)
 {
     SInGame *self = App->InGame;
 
@@ -292,7 +292,7 @@ void SInGame_ProcessEvent(SApp *App, SDL_Event *Event)
     }
 }
 
-void SInGame_OnKeyDown(SApp *App, SDLKey sym)
+void SInGame_OnKeyDown(SApp *App, SDL_Keycode sym)
 {
     switch (sym) {
     case SDLK_F1: { //F1

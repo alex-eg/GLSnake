@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "SDL_render.h"
+#include "SDL_video.h"
 #include "ingame.h"
 #include "paused.h"
 #include "mainmenu.h"
@@ -25,6 +27,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
+    printf("OpenGL version: %s.%s", glGetString(GL_MAJOR_VERSION), glGetString(GL_MINOR_VERSION));
     printf("Entering loop...\n");
     while (Snake.Running) {
         while (SDL_PollEvent(&Event)) {
@@ -73,7 +76,7 @@ void SCleanup(SApp *App)
     SHighScores_Save(App, "./scores.dat");
     SHighScores_Delete(App);
     SFont_Delete(App);
-    SDL_FreeSurface(App->SDisplay);
+    // TODO: SDL_FreeSurface(App->SDisplay);
     Mix_CloseAudio();
     App->State.Cleanup(App);
     SDL_Quit();
@@ -82,6 +85,10 @@ void SCleanup(SApp *App)
 int SInitSdl(SApp *App)
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) return 1;
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,        1);
 
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE,            8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,          8);
@@ -99,7 +106,15 @@ int SInitSdl(SApp *App)
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  0);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  0);
 
-    if ((App->SDisplay = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_HWSURFACE | SDL_GL_DOUBLEBUFFER | SDL_OPENGL)) == NULL) return 2;
+    // TODO: Assert
+    App->SWindow = SDL_CreateWindow("GLSnake",
+                                    SDL_WINDOWPOS_UNDEFINED,
+                                    SDL_WINDOWPOS_UNDEFINED,
+                                    WIDTH, HEIGHT,
+                                    SDL_GL_DOUBLEBUFFER | SDL_WINDOW_OPENGL);
+     App->SRenderer = SDL_CreateRenderer(App->SWindow, -1, 0);
+     SDL_GL_CreateContext(App->SWindow);
+
     glViewport(0, 0, WIDTH, HEIGHT);
 
     glEnable(GL_BLEND);

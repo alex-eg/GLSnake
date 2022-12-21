@@ -2,7 +2,7 @@
 #define _S_TTFONTS
 
 #include "globals.h"
-#include <SDL/SDL_ttf.h>
+#include <SDL_ttf.h>
 #include <math.h>
 
 enum FontSize {size24, size16, size48};

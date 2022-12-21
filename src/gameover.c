@@ -88,7 +88,7 @@ void SGameOver_Render(SApp *App)
 	position.x -= 60;
 	SFont_RenderText(App->Font, "Press Enter to exit to Main Menu", &position, &color, size24);
     }
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(App->SWindow);
 }
 
 void SGameOver_ProcessEvent(SApp *App, SDL_Event *event)
@@ -107,7 +107,7 @@ void SGameOver_ProcessEvent(SApp *App, SDL_Event *event)
     }
 }
 
-void SGameOver_OnKeyDown(SApp *App, SDLKey sym)
+void SGameOver_OnKeyDown(SApp *App, SDL_Keycode sym)
 {
     SGameOver *self = App->GameOver;
     if (self->highscored) {

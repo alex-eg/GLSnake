@@ -1,4 +1,6 @@
+#include <SDL_video.h>
 #include "mainmenu.h"
+#include "SDL_keycode.h"
 
 void SMainMenu_Render(SApp *App)
 {
@@ -18,7 +20,7 @@ void SMainMenu_Render(SApp *App)
 	SButton_Render(self->HighScores);
 	SFont_glDisable2D();
     }
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(App->SWindow);
 }
 
 void SMainMenu_Init(SApp *App)
@@ -93,24 +95,24 @@ void SMainMenu_Loop(SApp *App)
 
 void SMainMenu_ProcessEvent(SApp *App, SDL_Event *Event)
 {
-    switch (Event->type) {
-    case SDL_KEYDOWN : {
-        SMainMenu_OnKeyDown(App, Event->key.keysym.sym, Event->key.keysym.mod, Event->key.keysym.unicode);
-        break;
-    }
-    case SDL_QUIT : {
-        App->Running = 0;
-        break;
-    }
-    default: break;
-    }
+   switch (Event->type) {
+   case SDL_KEYDOWN : {
+       SMainMenu_OnKeyDown(App, Event->key.keysym.sym, Event->key.keysym.mod);
+       break;
+   }
+   case SDL_QUIT : {
+       App->Running = 0;
+       break;
+   }
+   default: break;
+   }
 }
 
-void SMainMenu_OnKeyDown(SApp *App, SDLKey sym, SDLMod mod, Uint16 unicode)
+void SMainMenu_OnKeyDown(SApp *App, SDL_KeyCode sym, SDL_Keymod mod)
 {
     SMainMenu *self = App->MainMenu;
-    if (self->ifhighscores) { 
-	self->ifhighscores = 0; 
+    if (self->ifhighscores) {
+	self->ifhighscores = 0;
 	return;
     }
     switch(sym) {
@@ -162,7 +164,7 @@ void SMainMenu_Switch(SApp *App)
 }
 
 /*--=== Callbacks ===--*/
-void SMainMenu_StartGame(SApp *App) 
+void SMainMenu_StartGame(SApp *App)
 {
     SInGame_Switch(App);
     App->State.Init(App);
