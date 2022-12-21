@@ -108,11 +108,6 @@ int SInitSdl(SApp *App)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,          16);
     SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,         32);
 
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE,      8);
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE,    8);
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE,     8);
-    SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE,    8);
-
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS,  0);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES,  0);
 
@@ -121,12 +116,19 @@ int SInitSdl(SApp *App)
                                     SDL_WINDOWPOS_UNDEFINED,
                                     SDL_WINDOWPOS_UNDEFINED,
                                     WIDTH, HEIGHT,
-                                    SDL_GL_DOUBLEBUFFER | SDL_WINDOW_OPENGL);
-     App->SRenderer = SDL_CreateRenderer(App->SWindow, -1, 0);
-     SDL_GL_CreateContext(App->SWindow);
+                                    SDL_WINDOW_OPENGL);
+    if (App->SWindow == NULL) {
+        printf("Failed to create window: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    void *ctx = SDL_GL_CreateContext(App->SWindow);
+    if (ctx == NULL) {
+        printf("Failed to create context: %s\n", SDL_GetError());
+        return 1;
+    }
 
     glViewport(0, 0, WIDTH, HEIGHT);
-
     glEnable(GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
