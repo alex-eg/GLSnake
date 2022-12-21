@@ -34,12 +34,12 @@ void SGameOver_Render(SApp *App)
 {
     SGameOver *self = App->GameOver;
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
+
     SDL_Rect position;
     SDL_Color color = { 200, 0, 255 };
     position.x = WIDTH / 2 - 120;
     position.y = HEIGHT / 2 + 200;
-    
+
     SFont_glEnable2D();
 
     glBindTexture(GL_TEXTURE_2D, self->texture);
@@ -63,8 +63,8 @@ void SGameOver_Render(SApp *App)
 
     glEnd();
 
-    glDisable(GL_TEXTURE_2D);   
-    
+    glDisable(GL_TEXTURE_2D);
+
     SFont_RenderText(App->Font, "Game Over!", &position, &color, size48);
 
     SHighScores_Render(App);
@@ -132,7 +132,7 @@ void SGameOver_OnKeyDown(SApp *App, SDLKey sym)
 		memcpy(table->nameThird, table->nameSecond, 8);
 		table->second = table->first;
 		memcpy(table->nameSecond, table->nameFirst, 8);
-		
+
 		table->first = self->score;
 		memcpy(table->nameFirst, self->name, 8);
 	    } else if (self->score >= table->second) {
@@ -152,7 +152,7 @@ void SGameOver_OnKeyDown(SApp *App, SDLKey sym)
 	    self->score = 0;
 	    break;
 	}
-	case SDLK_ESCAPE: { 
+	case SDLK_ESCAPE: {
 	    self->name[0] = '\0';
 	    self->symbols = 0;
 	    self->score = 0;
@@ -167,10 +167,10 @@ void SGameOver_OnKeyDown(SApp *App, SDLKey sym)
 	}
 	default: break;
 	}
-    } else {	
+    } else {
 	switch (sym) {
 	case SDLK_RETURN:
-	case SDLK_ESCAPE: { 
+	case SDLK_ESCAPE: {
 	    SMainMenu_Switch(App);
 	    break;
 	}

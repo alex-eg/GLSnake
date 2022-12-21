@@ -12,7 +12,7 @@ void SMainMenu_Render(SApp *App)
 	SHighScores_Render(App);
     } else {
 	SLabel_Render(self->Logo);
-         
+
 	SButton_Render(self->Start);
 	SButton_Render(self->Exit);
 	SButton_Render(self->HighScores);
@@ -68,7 +68,7 @@ void SMainMenu_InitGUI(SApp *App)
     SButton_Set(self->HighScores, WIDTH / 2 - 140, 130, 140, 30);
     SButton_SetText(self->HighScores, "High Scores");
     SButton_SetCallback(self->HighScores, SMainMenu_ShowHighScores);
- 
+
     self->Exit = SButton_Create(App);
     SButton_Set(self->Exit, WIDTH / 2 - 64, 80, 140, 30);
     SButton_SetText(self->Exit, "Exit");

@@ -11,7 +11,7 @@
 #define WIDTH 600
 #define HEIGHT 600
 
-#ifndef RESOURCE_DIR 
+#ifndef RESOURCE_DIR
 #define RESOURCE_DIR "./"
 #endif
 
