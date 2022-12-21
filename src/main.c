@@ -27,7 +27,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    printf("OpenGL version: %s.%s", glGetString(GL_MAJOR_VERSION), glGetString(GL_MINOR_VERSION));
+    printf("OpenGL version: %s", glGetString(GL_VERSION));
     printf("Entering loop...\n");
     while (Snake.Running) {
         while (SDL_PollEvent(&Event)) {

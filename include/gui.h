@@ -8,11 +8,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <GL/gl.h>
-
 struct STexture {
     int size;
-    char bitsPerPixel; 
+    char bitsPerPixel;
     GLuint texID;
 };
 typedef struct STexture STexture;
@@ -33,7 +31,7 @@ struct SButton {
     char *text;
 };
 typedef struct SButton SButton;
-    
+
 /*--- Textures! ---*/
 int STexture_Load(STexture *, char *filename);
 void STexture_Unload(STexture *);

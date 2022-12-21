@@ -2,7 +2,8 @@
 #define _S_GLOB
 
 #include <SDL.h>
-#include <GL/gl.h>
+#define GL_SILENCE_DEPRECATION
+#include <OpenGL/gl.h>
 #include <SDL_mixer.h>
 
 #define CUBESIZE 30
