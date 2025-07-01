@@ -1,6 +1,8 @@
-CC = clang
-CFLAGS = -g -std=c99 -Wall -I$(INCPATH) -DRESOURCE_DIR=\"$(RESPATH)\"
-LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf -lm
+CC ?= clang
+ADD_CFLAGS ?=
+ADD_LFLAGS ?=
+CFLAGS = -g -std=c99 -Wall -I$(INCPATH) -DRESOURCE_DIR=\"$(RESPATH)\" $(ADD_CFLAGS)
+LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf -lm $(ADD_LFLAGS)
 
 OBJPATH = ./obj
 BINPATH = ./bin
@@ -17,12 +19,12 @@ all: $(BINPATH)/snake
 	cp $< ./
 
 $(OBJPATH)/%.o : $(SRCPATH)/%.c $(DEPS) | $(OBJPATH)
-	$(CC) -c -o $@ $< $(CFLAGS) 
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 $(BINPATH)/snake: $(OBJ) | $(BINPATH)
 	$(CC) $^ -o $@ $(LIBS)
 
-$(OBJPATH):	
+$(OBJPATH):
 	mkdir -p $(OBJPATH)
 
 $(BINPATH):
