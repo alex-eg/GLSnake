@@ -43,7 +43,7 @@ $(BINPATH):
 	mkdir -p $(BINPATH)
 
 clean:
-	rm -f *~ $(OBJPATH)/*.o $(BINPATH)/* $(SRCPATH)/*~ $(INCPATH)/*~
+	rm -f *~ $(OBJPATH)/*.o $(BINPATH)/* $(SRCPATH)/*~ $(INCPATH)/*~ snake
 
 count:
 	printf "%d\t lines of sources\n %d\t lines of headers\n" `cat $(SRCPATH)/*.c | wc -l` `cat $(INCPATH)/*.h | wc -l`
