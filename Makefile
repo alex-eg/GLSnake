@@ -1,8 +1,20 @@
 CC ?= clang
 ADD_CFLAGS ?=
 ADD_LFLAGS ?=
-CFLAGS = -g -std=c99 -Wall -I$(INCPATH) -DRESOURCE_DIR=\"$(RESPATH)\" $(ADD_CFLAGS)
-LIBS = -lSDL -lGL -lSDL_mixer -lSDL_ttf -lm $(ADD_LFLAGS)
+
+SDL2_CFLAGS ?= $(shell pkg-config --cflags sdl2 SDL2_mixer SDL2_ttf)
+SDL2_LIBS ?= $(shell pkg-config --libs sdl2 SDL2_mixer SDL2_ttf)
+
+PLATFORM := $(shell uname -s)
+ifeq ($(PLATFORM),Darwin)
+  GL_LIBS = -framework OpenGL
+else
+  GL_LIBS = -lGL
+endif
+
+CFLAGS = -g -std=c99 -Wall -I$(INCPATH) -DRESOURCE_DIR=\"$(RESPATH)\" \
+	$(SDL2_CFLAGS) $(ADD_CFLAGS)
+LIBS = $(SDL2_LIBS) $(GL_LIBS) -lm $(ADD_LFLAGS)
 
 OBJPATH = ./obj
 BINPATH = ./bin
@@ -36,4 +48,4 @@ clean:
 count:
 	printf "%d\t lines of sources\n %d\t lines of headers\n" `cat $(SRCPATH)/*.c | wc -l` `cat $(INCPATH)/*.h | wc -l`
 
-.PHONY: clean count
+.PHONY: all clean count
