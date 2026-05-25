@@ -1,3 +1,18 @@
+/* This file is part of GLSnake.
+
+GLSnake is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+GLSnake is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GLSnake. If not, see <https://www.gnu.org/licenses/>. */
+
 #include "highscores.h"
 
 void SHighScores_Create(SApp *App)
@@ -41,7 +56,7 @@ void SHighScores_Save(SApp *App, const char *filename)
 void SHighScores_Render(SApp *App)
 {
     SHighScores *self = App->HighScores;
-    
+
     SFont_glEnable2D();
     SDL_Rect position;
     SDL_Color color = { 255, 255, 255 };
@@ -67,7 +82,7 @@ void SHighScores_Render(SApp *App)
 
     sprintf(s, "%s", self->table.nameThird);
     position.x -= 256;
-    position.y -= 36; 
+    position.y -= 36;
     SFont_RenderText(App->Font, s, &position, &color, size24);
     sprintf(s, "%d", self->table.third);
     position.x += 256;

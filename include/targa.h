@@ -1,3 +1,18 @@
+/* This file is part of GLSnake.
+
+GLSnake is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+GLSnake is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GLSnake. If not, see <https://www.gnu.org/licenses/>. */
+
 #ifndef _S_TGA
 #define _S_TGA
 
@@ -20,12 +35,12 @@ struct STGAHeader {
     TGAbyte IDlength;      /* 1 */
     TGAbyte colorMapType;  /* 2; 0 - color map is not included, 1 - color map is included */
     TGAbyte imageType;     /* 3 */
-    
+
     /*-= Color Map Spec - 5 bytes =-*/
     TGAshort firstEntryIndex;   /* 4.1 */
     TGAshort colorMapLength;    /* 4.2 */
     TGAbyte colorMapEntrySize;  /* 4.3 */
-    
+
     /*-= Image Specification - 10 bytes  =-*/
     TGAshort xOrigin;           /* 5.1 */
     TGAshort yOrigin;           /* 5.2 */
@@ -47,7 +62,7 @@ struct STGAImage {
                            /*    each pixel is stored as an integral number of bytes */
 };
 typedef struct STGAImage STGAImage;
-    
+
 /*---== TGA Developer Area ==---*/
 struct STGADevArea {
     TGAbyte *devData; /* 9; Size and format are totally up to developer */
@@ -71,7 +86,7 @@ typedef struct STGAExtArea STGAExtArea;
 
 /*---== TGA Footer ==---*/
 struct STGAFooter {
-    /*4*/    TGAlong extAreaOffset;      /* 28; if 0, no Extnsion Area */ 
+    /*4*/    TGAlong extAreaOffset;      /* 28; if 0, no Extnsion Area */
     /*4*/    TGAlong devDirectoryOffset; /* 29; if 0, no Developer Area */
     /*16*/   TGAASCII signature[16];     /* 30 */
     /*1*/    TGAASCII reservedChar;      /* 31 */

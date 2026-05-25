@@ -1,3 +1,18 @@
+/* This file is part of GLSnake.
+
+GLSnake is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.
+
+GLSnake is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details.
+
+You should have received a copy of the GNU General Public License
+along with GLSnake. If not, see <https://www.gnu.org/licenses/>. */
+
 #include "ttfonts.h"
 
 void SFont_Create(SApp *App)
@@ -33,11 +48,11 @@ void SFont_glEnable2D()
     glDisable(GL_DEPTH_TEST);
 
     glGetIntegerv(GL_VIEWPORT, vPort);
-  
+
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-  
+
     glOrtho(0, vPort[2], 0, vPort[3], -1, 1);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -47,7 +62,7 @@ void SFont_glEnable2D()
 void SFont_glDisable2D()
 {
     glMatrixMode(GL_PROJECTION);
-    glPopMatrix();   
+    glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 
@@ -67,31 +82,31 @@ void SFont_RenderText(SFont *self, const char *text, SDL_Rect *location, SDL_Col
 
     w = SFont_nextpoweroftwo(initial->w);
     h = SFont_nextpoweroftwo(initial->h);
-	
+
     intermediary = SDL_CreateRGBSurface(0, w, h, 32,
 					0x00ff0000,
 					0x0000ff00,
 					0x000000ff,
 					0xff000000);
-    
+
     SDL_BlitSurface(initial, 0, intermediary, 0);
-	
+
     /* Tell GL about our new texture */
-    
+
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);	
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_BGRA, 
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, w, h, 0, GL_BGRA,
 		 GL_UNSIGNED_BYTE, intermediary->pixels );
-	
+
     /* Prepare to render our texture */
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture);
     glColor3f(1.0f, 1.0f, 1.0f);
-	
+
     /* Draw a texture quad at location */
     glBegin(GL_QUADS);
 
@@ -104,10 +119,10 @@ void SFont_RenderText(SFont *self, const char *text, SDL_Rect *location, SDL_Col
     glTexCoord2f(0.0f, 0.0f);
     glVertex2f(location->x    , location->y + h);
     glEnd();
-	
+
     /* Bad things happen if we delete the texture before it finishes */
     glFinish();
-	
+
     /* return the deltas in the unused w,h part of the rect */
     location->w = initial->w;
     location->h = initial->h;
