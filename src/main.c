@@ -82,7 +82,6 @@ int SInit(SApp *App)
     App->GameOver = NULL;
 
     SHighScores_Create(App);
-    SHighScores_Read(App, "./scores.dat");
 
     SGameOver_Create(App);
     SInGame_Create(App);
@@ -98,7 +97,6 @@ int SInit(SApp *App)
 
 void SCleanup(SApp *App)
 {
-    SHighScores_Save(App, "./scores.dat");
     SHighScores_Delete(App);
     SFont_Delete(App);
     // TODO: SDL_FreeSurface(App->SDisplay);
