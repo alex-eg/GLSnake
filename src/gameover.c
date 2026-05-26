@@ -142,23 +142,30 @@ void SGameOver_OnKeyDown(SApp *App, SDL_Keycode sym)
 	case SDLK_RETURN: {
 	    self->name[self->symbols] = '\0';
 	    HighScoreTable *table = &App->HighScores->table;
-	    if (self->score >= table->first) {
-		table->third = table->second;
-		memcpy(table->nameThird, table->nameSecond, 8);
-		table->second = table->first;
-		memcpy(table->nameSecond, table->nameFirst, 8);
+        if (self->score >= table->first) {
+            // Copy second -> third
+            table->third = table->second;
+            memcpy(table->nameThird, table->nameSecond, 8);
 
-		table->first = self->score;
-		memcpy(table->nameFirst, self->name, 8);
+            // Copy first -> second
+            table->second = table->first;
+            memcpy(table->nameSecond, table->nameFirst, 8);
+
+            // Set first
+            table->first = self->score;
+            memcpy(table->nameFirst, self->name, 8);
 	    } else if (self->score >= table->second) {
-		table->third = table->second;
-		memcpy(table->nameThird, table->nameSecond, 8);
+            // Copy second -> third
+            table->third = table->second;
+            memcpy(table->nameThird, table->nameSecond, 8);
 
-		table->second = self->score;
-		memcpy(self->name, table->nameSecond, 8);
-	    } else {
-		table->third = self->score;
-		memcpy(self->name, table->nameThird, 8);
+            // Set second
+            table->second = self->score;
+            memcpy(self->name, table->nameSecond, 8);
+        } else {
+            // Set third
+            table->third = self->score;
+            memcpy(self->name, table->nameThird, 8);
 	    }
 	    /* save name to highscores */
 	    self->highscored = 0;
