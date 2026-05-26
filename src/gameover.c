@@ -39,10 +39,10 @@ void SGameOver_SetScore(SApp *App, int score)
 {
     SGameOver *self = App->GameOver;
     self->score = score;
-    if (self->score >= App->HighScores->table.first ||
-	self->score >= App->HighScores->table.second ||
-	self->score >= App->HighScores->table.third)
-	self->highscored = 1;
+
+    if (self->score >= App->HighScores->table.third) {
+        self->highscored = 1;
+    }
 }
 
 void SGameOver_Render(SApp *App)
