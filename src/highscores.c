@@ -15,27 +15,80 @@ along with GLSnake. If not, see <https://www.gnu.org/licenses/>. */
 
 #include "highscores.h"
 
+#include <SDL_filesystem.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+NOTE: That parts of a pref path are important and must be consistent
+      across the codebase. If you'll need to store something else -
+      move those defines to globals.h for further reusage.
+*/
+#define SCORES_ORG "glsnake"
+#define SCORES_APP "GLSnake"
+#define SCORES_FILE "scores.dat"
+
+static char *get_scores_path(void)
+{
+    char *base = SDL_GetPrefPath(SCORES_ORG, SCORES_APP);
+    if (base == NULL) {
+        return NULL;
+    }
+
+    size_t len = strlen(base) + strlen(SCORES_FILE) + 1;
+    char *path = malloc(len);
+    if (path != NULL) {
+        snprintf(path, len, "%s%s", base, SCORES_FILE);
+    }
+    SDL_free(base);
+    return path;
+}
+
+static void SHighScores_Init(SHighScores *self)
+{
+    self->table.first = 7;
+    strcpy(self->table.nameFirst, "ktt9");
+
+    self->table.second = 3;
+    strcpy(self->table.nameSecond, "docker");
+
+    self->table.third = 0;
+    strcpy(self->table.nameThird, "<void>");
+}
+
 void SHighScores_Create(SApp *App)
 {
     SHighScores *self = malloc(sizeof(SHighScores));
     self->App = App;
+    self->scores_path = get_scores_path();
     App->HighScores = self;
+
+    if (self->scores_path == NULL) {
+        fprintf(stderr, "Failed to construct path for saving high scores");
+        SHighScores_Init(self);
+        return;
+    }
+
+    FILE *f = fopen(self->scores_path, "rb");
+    if (f) {
+        /* File exists! */
+        fread(&self->table, sizeof(HighScoreTable), 1, f);
+        fclose(f);
+    } else {
+        /* File doesn't exist! */
+        SHighScores_Init(self);
+    }
 }
 
-void SHighScores_Read(SApp *App, const char *filename)
+void SHighScores_Read(SApp *App)
 {
     SHighScores *self = App->HighScores;
-    FILE *f = fopen(filename, "rb");
+    FILE *f = fopen(self->scores_path, "rb");
     if (f) {
-	/* File exists! */
-	fread (&self->table, sizeof(HighScoreTable), 1, f);
-	fclose(f);
+        fread(&self->table, sizeof(HighScoreTable), 1, f);
+        fclose(f);
     } else {
-	/* File doesn't exist! */
-	self->table.first = self->table.second = self->table.third = 0;
-	strcpy(self->table.nameFirst, "<void>");
-	strcpy(self->table.nameSecond, "<void>");
-	strcpy(self->table.nameThird, "<void>");
+        SHighScores_Init(self);
     }
 }
 
