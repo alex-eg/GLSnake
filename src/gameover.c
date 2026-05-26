@@ -161,12 +161,13 @@ void SGameOver_OnKeyDown(SApp *App, SDL_Keycode sym)
 
             // Set second
             table->second = self->score;
-            memcpy(self->name, table->nameSecond, 8);
+            memcpy(table->nameSecond, self->name, 8);
         } else {
             // Set third
             table->third = self->score;
-            memcpy(self->name, table->nameThird, 8);
-	    }
+            memcpy(table->nameThird, self->name, 8);
+        }
+
 	    /* save name to highscores */
 	    self->highscored = 0;
 	    self->name[0] = '\0';
