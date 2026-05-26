@@ -39,18 +39,31 @@ void SHighScores_Read(SApp *App, const char *filename)
     }
 }
 
-void SHighScores_Delete(SApp *App)
-{
-    free(App->HighScores);
-    App->HighScores = NULL;
-}
 
-void SHighScores_Save(SApp *App, const char *filename)
+void SHighScores_Save(SApp *App)
 {
     SHighScores *self = App->HighScores;
-    FILE *f = fopen(filename, "wb+");
+
+    FILE *f = fopen(self->scores_path, "wb");
+    if (f == NULL) {
+        fprintf(stderr, "Failed to save high scores to %s\n", self->scores_path);
+        return;
+    }
     fwrite(&self->table, sizeof(HighScoreTable), 1, f);
     fclose(f);
+}
+
+void SHighScores_Delete(SApp *App)
+{
+    SHighScores *self = App->HighScores;
+
+    if (self->scores_path != NULL) {
+        SHighScores_Save(App);
+        free(self->scores_path);
+    }
+
+    free(self);
+    App->HighScores = NULL;
 }
 
 void SHighScores_Render(SApp *App)
