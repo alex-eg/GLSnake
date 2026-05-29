@@ -6,7 +6,7 @@ The game is packaged for the most popular linux gaming distributions: MacOS and 
 
 **MacOS**
 ```bash
-brew tap pkulev/brew
+brew tap pkulev/homebrew-riru
 brew install glsnake
 ```
 
