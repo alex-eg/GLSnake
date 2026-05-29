@@ -7,7 +7,11 @@ project(
   ],
 )
 
-add_project_arguments('-DRESOURCE_DIR="./resources"', language: 'c')
+resource_dir = get_option('resource_dir')
+add_project_arguments(
+  '-DRESOURCE_DIR="@0@"'.format(resource_dir),
+  language : 'c',
+)
 
 # Provides 'sources' and 'dependencies' variables.
 subdir('src')
