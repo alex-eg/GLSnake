@@ -1,0 +1,6 @@
+option(
+  'resource_dir',
+  type : 'string',
+  value : './resources/',
+  description : 'Path to game assets directory (trailing slash is non-negotiable).',
+)
